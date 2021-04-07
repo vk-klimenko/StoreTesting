@@ -61,6 +61,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminPanelTest.cs" />
+    <Compile Include="BasesTest.cs" />
     <Compile Include="StoreEcomerc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
