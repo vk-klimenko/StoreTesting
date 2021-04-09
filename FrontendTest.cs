@@ -20,16 +20,15 @@ namespace StoreTesting
         {
             driver.Url = $"{baseUrl}rubber-ducks-c-1/";
             string locator = ".//div[@id='box-category']//ul[contains(@class,'products')]/li";
-
+            string locatorSticker = ".//div[contains(@class,'sticker')]";
+            
             IList<IWebElement> products = driver.FindElements(By.XPath(locator));
 
             if(AreElementsPresent(By.XPath(locator)))
             {
                 for (int i = 0; i < products.Count; i++)
                 {
-                    
-                    Assert.IsTrue(IsElementPresent(By.XPath(".//div[contains(@class,'sticker')]"), products, i));
-
+                    Assert.IsTrue(AreElementsPresent(products, locatorSticker, i));
                     products = driver.FindElements(By.XPath(locator));
                 }
             }

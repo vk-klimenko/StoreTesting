@@ -35,6 +35,17 @@ namespace StoreTesting
             return driver.FindElements(locator).Count > 0;
         }
         /// <summary>
+        /// Поиск элементов в цикле
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <param name="list">Список элементов</param>
+        /// <param name="i">Индекс</param>
+        /// <returns></returns>
+        protected bool AreElementsPresent(IList<IWebElement> list, string locator, int i)
+        {
+            return (list[i].FindElements(By.XPath(locator))).Count == 1;
+        }
+        /// <summary>
         /// Поиск одного элемента
         /// </summary>
         /// <param name="locator">Локатор поиска</param>
