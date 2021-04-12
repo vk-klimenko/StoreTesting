@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -144,8 +145,59 @@ namespace StoreTesting
             }
             
         }
+
+        /// <summary>
+        /// Проверяем, что страны расположены в алфавитном порядке.
+        /// </summary>
+        /// <returns>True - списки одинаковы, False - не одинаковы</returns>
+        protected bool CheckingCountry(IList<IWebElement> rows)
+        {
+            List<string> countryList = new List<string>();
+
+            for (int i = 0; i < rows.Count; i++)
+            {
+                countryList.Add(rows[i].FindElement(By.CssSelector("td:nth-child(5n) a")).GetAttribute("innerText").Trim());
+
+                // проверяем есть ли у страны доп. зоны
+                int temp = Convert.ToInt32(rows[i].FindElement(By.CssSelector("td:nth-child(6n)")).GetAttribute("innerText").Trim());
+                if (temp > 0)
+                {
+                    List<string> byZones = new List<string>();
+                    
+                    driver.Url = rows[i].FindElement(By.CssSelector("td:nth-child(5n) a")).GetAttribute("href");
+
+                    // Получаем список зон и делаем срез с помощью xpath [position() > 1 and position() < last()]
+                    IList<IWebElement> rowsZones = driver.FindElements(By.XPath("//table[@id='table-zones']//tr[position() > 1 and position() < last()]"));
+                    
+                    AreElementsPresent(By.XPath("//table[@id='table-zones']//tr[position()>1 and position() < last()]"));
+                    
+                    foreach (IWebElement rowZone in rowsZones)
+                    {
+                        byZones.Add(rowZone.FindElement(By.XPath(".//td[3]")).GetAttribute("innerText").Trim());
+                    }
+                    List<string> byZonesSort = byZones;
+
+                    // Проверка доп зон на расположение в алфавитном порядке
+                    Assert.IsTrue(byZones.SequenceEqual(byZonesSort));
+                    driver.Navigate().Back();
+                    // Обновляем элементы
+                    rows = driver.FindElements(By.CssSelector("tr.row"));
+                }
+            }
+            List<string> countryListSort = countryList;
+            countryListSort.Sort();
+            
+            return countryList.SequenceEqual(countryListSort); 
+        }
+
+        protected bool CheckingGeoZone()
+        {
+            return true;
+        }
+
+
        
-     
+            
     
     }
 }

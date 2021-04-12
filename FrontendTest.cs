@@ -6,6 +6,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support;
 using OpenQA.Selenium.Support.UI;
+using System.Linq;
 
 namespace StoreTesting
 {
@@ -33,6 +34,8 @@ namespace StoreTesting
                 }
             }
         }
-        
+
+       
+
     }
 }
