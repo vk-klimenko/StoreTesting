@@ -190,12 +190,9 @@ namespace StoreTesting
             return countryList.SequenceEqual(countryListSort); 
         }
 
-        protected bool CheckingGeoZone()
-        {
-            return true;
-        }
+        
 
-
+        
        
             
     
