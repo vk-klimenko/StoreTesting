@@ -6,17 +6,21 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support;
 using OpenQA.Selenium.Support.UI;
+
+
 namespace StoreTesting
 {
     public class BasesTest
     {
         protected IWebDriver driver;
         protected string baseUrl = "http://litecart/";
+       
 
         [SetUp]
         public void Start()
         {
             driver = new ChromeDriver();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         }
 
         [TearDown]
@@ -99,6 +103,8 @@ namespace StoreTesting
                 return false;
             }
         }
+
+        
         
         /// <summary>
         /// Авторизация в админ панель
@@ -190,11 +196,37 @@ namespace StoreTesting
             return countryList.SequenceEqual(countryListSort); 
         }
 
-        
+        /// <summary>
+        /// Нажать на кнопку
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        protected void PressButton(By locator)
+        {
+            IsElementPresent(locator);
+            driver.FindElement(locator).Click();
+        }
+        /// <summary>
+        /// Выбрать из выпадающего списка
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <param name="selectValue">Значение из выпадающего списка по "By value"</param>
+        protected void DropDownList(By locator, string selectValue)
+        {
+            SelectElement selectElement = new SelectElement(driver.FindElement(locator));
+            selectElement.SelectByValue(selectValue);
+        }
+        /// <summary>
+        /// Выбрать из выпадающего списка
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <param name="selectByIndex">Значение из выпадающего списка по "By index"</param>
+        protected void DropDownList(By locator, int selectByIndex)
+        {
+            SelectElement selectElement = new SelectElement(driver.FindElement(locator));
+            selectElement.SelectByIndex(selectByIndex);
+        }
 
-        
-       
-            
-    
+
+
     }
 }

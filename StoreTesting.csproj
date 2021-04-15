@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="AdminPanelTest.cs" />
     <Compile Include="BasesTest.cs" />
+    <Compile Include="CreateUsers.cs" />
     <Compile Include="FrontendTest.cs" />
     <Compile Include="StoreEcomerc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
