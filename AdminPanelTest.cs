@@ -169,20 +169,21 @@ namespace StoreTesting
             // click add new product
             driver.FindElement(By.XPath(".//td[@id='content']//*[.=' Add New Product']")).Click();
 
+
+            CreateProduct product = new CreateProduct("Ball", "2020-05-25", "2021-05-29");
+
             // 3. Заполняемвкладки General, Information и Prices и сохраняем. Скидки(Campains) на вкладке Prices можно не добавлять
 
             // General
-
-            
 
             // Status
             driver.FindElement(By.XPath(".//div[@id='tab-general']//label[.=' Enabled']")).Click();
 
             // Name
-            driver.FindElement(By.XPath(".//div[@id='tab-general']//input[@name='name[en]']")).Click();
+            driver.FindElement(By.XPath(".//div[@id='tab-general']//input[@name='name[en]']")).SendKeys(Keys.Home + product.Name);
 
             // Code
-            driver.FindElement(By.XPath(".//div[@id='tab-general']//input[@name='code']")).Click();
+            driver.FindElement(By.XPath(".//div[@id='tab-general']//input[@name='code']")).SendKeys(Keys.Home + product.Code);
 
             // Categories
             driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='categories[]' and @value='{new Random().Next(0, 3)}']")).Click();
@@ -190,12 +191,8 @@ namespace StoreTesting
             // Product Groups
             driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='product_groups[]' and @value='1-{Convert.ToString(new Random().Next(1, 4))}']")).Click();
 
-            //string input = (".//div[@id='tab-general']//input[@name='quantity']");
-            //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            //js.ExecuteScript("arguments[0].setAttribute('value', '999')", input);
-            //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            //js.ExecuteScript("document.querySelector('[name='quantity']').setAttribute('value', '999')");
-
+            // Quantity
+            SetValueFromJS(By.Name("quantity"), product.Quantity);
 
             // Quantity Unit <select name="quantity_unit_id" data-size="auto"> SelectElementByValue=1
             DropDownList(By.XPath(".//select[@name='quantity_unit_id']"), "1");
@@ -204,11 +201,19 @@ namespace StoreTesting
             DropDownList(By.XPath(".//select[@name='delivery_status_id']"), "1");
             
             // Sold Out Status   
-            DropDownList(By.XPath(".//select[@name='sold_out_status_id']"), "2");
+            DropDownList(By.XPath(".//select[@name='sold_out_status_id']"), Convert.ToString(new Random().Next(1,3)));
             
             // Upload Images
-            driver.FindElement(By.XPath(".//input[@name='new_images[]']")).SendKeys(@"C:\icon.png");
+            UpLoadFile(By.XPath(".//input[@name='new_images[]']"), @"C:\icon.png");
 
+            // Date from
+            SetValueFromJS(By.Name("date_valid_from"), "2000-05-27");
+
+            // Date to
+            SetValueFromJS(By.Name("date_valid_to"), "2000-11-27");
+
+            // Button Save
+            PressButton(By.XPath(".//span[@class='button-set']/button[@name='save']"));
         }
 
     }

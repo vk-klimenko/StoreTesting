@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -225,8 +226,25 @@ namespace StoreTesting
             SelectElement selectElement = new SelectElement(driver.FindElement(locator));
             selectElement.SelectByIndex(selectByIndex);
         }
-
-
+        /// <summary>
+        /// Загрузка файла
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <param name="path">Путь к файлу</param>
+        protected void UpLoadFile(By locator, string path)
+        {
+            driver.FindElement(locator).SendKeys(path);
+        }
+        /// <summary>
+        /// Установка значения value, с помощью JS
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <param name="value">Значение</param>
+        protected void SetValueFromJS(By locator, string value)
+        {
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript($"arguments[0].value = '{value}'", driver.FindElement(locator));
+        }
 
     }
 }
