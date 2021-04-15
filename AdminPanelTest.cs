@@ -140,5 +140,76 @@ namespace StoreTesting
 
         }
 
+        /// <summary>
+        /// Cценарий добавления товара
+        /// </summary>
+        [Test]
+        public void AddProduct()
+        {
+            // Сделайте сценарий для добавления нового товара(продукта) в учебном приложении litecart(в админке).
+            // Для добавления товара нужно открыть меню Catalog, в правом верхнем углу нажать кнопку "Add New Product", 
+            // заполнить поля с информацией о товаре и сохранить.
+            // Достаточно заполнить только информацию на вкладках General, Information и Prices.Скидки(Campains) на вкладке Prices можно не добавлять.
+            // Переключение между вкладками происходит не мгновенно, 
+            // поэтому после переключения можно сделать небольшую паузу(о том, как делать более правильные ожидания, 
+            // будет рассказано в следующих занятиях).
+            // Картинку с изображением товара нужно уложить в репозиторий вместе с кодом.
+            // При этом указывать в коде полный абсолютный путь к файлу плохо, на другой машине работать не будет. 
+            // Надо средствами языка программирования преобразовать относительный путь в абсолютный.
+            // После сохранения товара нужно убедиться, что он появился в каталоге(в админке).Клиентскую часть магазина можно не проверять.
+
+            // 1. Заходим в админку
+
+            AdminPanelAuth("admin", "admin");
+
+            // 2. Открываем меню Catalog и нажимаем "Add New Product"
+            
+            // click catalog
+            driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//*[.='Catalog']")).Click();
+            // click add new product
+            driver.FindElement(By.XPath(".//td[@id='content']//*[.=' Add New Product']")).Click();
+
+            // 3. Заполняемвкладки General, Information и Prices и сохраняем. Скидки(Campains) на вкладке Prices можно не добавлять
+
+            // General
+
+            
+
+            // Status
+            driver.FindElement(By.XPath(".//div[@id='tab-general']//label[.=' Enabled']")).Click();
+
+            // Name
+            driver.FindElement(By.XPath(".//div[@id='tab-general']//input[@name='name[en]']")).Click();
+
+            // Code
+            driver.FindElement(By.XPath(".//div[@id='tab-general']//input[@name='code']")).Click();
+
+            // Categories
+            driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='categories[]' and @value='{new Random().Next(0, 3)}']")).Click();
+
+            // Product Groups
+            driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='product_groups[]' and @value='1-{Convert.ToString(new Random().Next(1, 4))}']")).Click();
+
+            //string input = (".//div[@id='tab-general']//input[@name='quantity']");
+            //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            //js.ExecuteScript("arguments[0].setAttribute('value', '999')", input);
+            //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            //js.ExecuteScript("document.querySelector('[name='quantity']').setAttribute('value', '999')");
+
+
+            // Quantity Unit <select name="quantity_unit_id" data-size="auto"> SelectElementByValue=1
+            DropDownList(By.XPath(".//select[@name='quantity_unit_id']"), "1");
+            
+            // Delivery Status 
+            DropDownList(By.XPath(".//select[@name='delivery_status_id']"), "1");
+            
+            // Sold Out Status   
+            DropDownList(By.XPath(".//select[@name='sold_out_status_id']"), "2");
+            
+            // Upload Images
+            driver.FindElement(By.XPath(".//input[@name='new_images[]']")).SendKeys(@"C:\icon.png");
+
+        }
+
     }
 }
