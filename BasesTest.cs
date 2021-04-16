@@ -258,6 +258,24 @@ namespace StoreTesting
 
         }
 
-        
+        /// <summary>
+        /// Проверка товара к каталоге
+        /// </summary>
+        /// <param name="products">Список товаров</param>
+        /// <param name="name">Названиетовара, который ищем в каталоге</param>
+        /// <returns>Возвращает true, если товар найден.</returns>
+        protected bool IsProductInCatalog(IList<IWebElement> products, string name)
+        {
+            bool result = false;
+            foreach (IWebElement product in products)
+            {
+                if (product.GetAttribute("textContent").Trim() == name.Trim())
+                    result = true;
+                else
+                    continue;
+            }
+            return result;
+        }
+
     }
 }

@@ -23,8 +23,9 @@ namespace StoreTesting
             Code = GetCodeProduct();
             Quantity = GetRandomNumber();
             Price = GetRandomNumber();
-            DateFrom = GetRandomDate().Split(':')[0];
-            DateTo = GetRandomDate().Split(':')[1];
+            string date = GetRandomDate();
+            DateFrom = date.Split(':')[0];
+            DateTo = date.Split(':')[1];
 
         }
 

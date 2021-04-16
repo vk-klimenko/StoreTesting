@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -147,8 +148,6 @@ namespace StoreTesting
         public void AddProduct()
         {
 
-
-            
             // Сделайте сценарий для добавления нового товара(продукта) в учебном приложении litecart(в админке).
             // Для добавления товара нужно открыть меню Catalog, в правом верхнем углу нажать кнопку "Add New Product", 
             // заполнить поля с информацией о товаре и сохранить.
@@ -164,17 +163,17 @@ namespace StoreTesting
             // 1. Заходим в админку
 
             AdminPanelAuth("admin", "admin");
-
+            Thread.Sleep(3000);
             // 2. Открываем меню Catalog и нажимаем "Add New Product"
-            
+
             // click catalog
             driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//*[.='Catalog']")).Click();
+            Thread.Sleep(3000);
             // click add new product
             driver.FindElement(By.XPath(".//td[@id='content']//*[.=' Add New Product']")).Click();
 
-
             CreateProduct product = new CreateProduct("Ball");
-
+            Thread.Sleep(3000);
             // 3.1. Вкладка General Information и Prices и сохраняем. Скидки(Campains) на вкладке Prices можно не добавлять
 
             // General
@@ -187,22 +186,23 @@ namespace StoreTesting
 
             // Code
             driver.FindElement(By.XPath(".//div[@id='tab-general']//input[@name='code']")).SendKeys(Keys.Home + product.Code);
+            Thread.Sleep(3000);
 
             // Categories
-            driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='categories[]' and @value='{new Random().Next(0, 3)}']")).Click();
+            driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='categories[]' and @value='2']")).Click();
 
             // Product Groups
             driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='product_groups[]' and @value='1-{Convert.ToString(new Random().Next(1, 4))}']")).Click();
 
             // Quantity
             SetValueFromJS(By.Name("quantity"), product.Quantity, "value");
-
+            Thread.Sleep(3000);
             // Quantity Unit <select name="quantity_unit_id" data-size="auto"> SelectElementByValue=1
             DropDownList(By.XPath(".//select[@name='quantity_unit_id']"), "1");
             
             // Delivery Status 
             DropDownList(By.XPath(".//select[@name='delivery_status_id']"), "1");
-            
+            Thread.Sleep(3000);
             // Sold Out Status   
             DropDownList(By.XPath(".//select[@name='sold_out_status_id']"), Convert.ToString(new Random().Next(1,3)));
             
@@ -215,12 +215,9 @@ namespace StoreTesting
             // Date to
             SetValueFromJS(By.Name("date_valid_to"), product.DateTo, "value");
 
-            // Button Save
-            PressButton(By.XPath(".//span[@class='button-set']/button[@name='save']"));
-
             // Переход на вкладку Information
             PressButton(By.XPath(".//ul[@class='index']/li/a[.='Information']"));
-
+            Thread.Sleep(3000);
 
             // 3.2. Вкладка Information
 
@@ -250,11 +247,9 @@ namespace StoreTesting
             // Meta Description
             InputText(By.XPath(".//div[@id='tab-information']//input[@name='meta_description[en]']"), "This is meta description");
 
-            // Button Save
-            PressButton(By.XPath(".//span[@class='button-set']/button[@name='save']"));
-
             // Переход на вкладку Prices
             PressButton(By.XPath(".//ul[@class='index']/li/a[.='Prices']"));
+            Thread.Sleep(3000);
 
             // 3.3. Вкладка Prices
 
@@ -265,11 +260,22 @@ namespace StoreTesting
             DropDownList(By.XPath(".//select[@name='purchase_price_currency_code']"), "EUR");
 
             // Price	Price Incl. Tax (?)
-            SetValueFromJS(By.Name("gross_prices[USD]"), Convert.ToString(new Random().Next(1, 500)), "placeholder");
-            SetValueFromJS(By.Name("gross_prices[USD]"), Convert.ToString(new Random().Next(1, 500)), "placeholder");
+            SetValueFromJS(By.Name("prices[USD]"), Convert.ToString(new Random().Next(1, 500)), "value");
+            SetValueFromJS(By.Name("prices[EUR]"), Convert.ToString(new Random().Next(1, 500)), "value");
 
             // Button Save
             PressButton(By.XPath(".//span[@class='button-set']/button[@name='save']"));
+            Thread.Sleep(3000);
+
+            // 4. Проверка, что товар добавлен
+            // click catalog
+            driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//*[.='Catalog']")).Click();
+            Thread.Sleep(3000);
+
+            AreElementsPresent(By.XPath(".//td[@id='content']//table[@class='dataTable']//tr[@class='row' and position()>2]//a"));
+            IList<IWebElement> productList = driver.FindElements(By.XPath(".//td[@id='content']//table[@class='dataTable']//tr[@class='row' and position()>2]//a"));
+
+            Assert.IsTrue(IsProductInCatalog(productList, product.Name));
         }
 
     }
