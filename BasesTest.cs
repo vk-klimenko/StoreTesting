@@ -242,7 +242,7 @@ namespace StoreTesting
         protected void SetValueFromJS(By locator, string value, string property)
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript($"arguments[0].{property} = '{value}', arguments[0].dispatchEvent(new Event('change'))", driver.FindElement(locator));
+            js.ExecuteScript($"arguments[0].{property.Trim()} = '{value.Trim()}', arguments[0].dispatchEvent(new Event('change'))", driver.FindElement(locator));
         }
 
         /// <summary>

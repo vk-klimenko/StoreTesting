@@ -172,8 +172,7 @@ namespace StoreTesting
             // click add new product
             driver.FindElement(By.XPath(".//td[@id='content']//*[.=' Add New Product']")).Click();
 
-            CreateProduct product = new CreateProduct("Ball");
-            Thread.Sleep(3000);
+            CreateProduct product = new CreateProduct("Bannan");
             // 3.1. Вкладка General Information и Prices и сохраняем. Скидки(Campains) на вкладке Prices можно не добавлять
 
             // General
@@ -262,6 +261,16 @@ namespace StoreTesting
             // Price	Price Incl. Tax (?)
             SetValueFromJS(By.Name("prices[USD]"), Convert.ToString(new Random().Next(1, 500)), "value");
             SetValueFromJS(By.Name("prices[EUR]"), Convert.ToString(new Random().Next(1, 500)), "value");
+
+
+            // Campaigns
+            driver.FindElement(By.Id("add-campaign")).Click();
+
+            SetValueFromJS(By.Name("campaigns[new_1][start_date]"), $"{product.DateFrom}T12:00", "value");
+            SetValueFromJS(By.Name("campaigns[new_1][end_date]"), $"{product.DateTo}T:23:00", "value");
+            SetValueFromJS(By.Name("campaigns[new_1][percentage]"), Convert.ToString(new Random().Next(10, 50)), "value");
+            SetValueFromJS(By.Name("campaigns[new_1][USD]"), Convert.ToString(new Random().Next(10, 500)), "value");
+            SetValueFromJS(By.Name("campaigns[new_1][EUR]"), Convert.ToString(new Random().Next(10, 400)), "value");
 
             // Button Save
             PressButton(By.XPath(".//span[@class='button-set']/button[@name='save']"));
