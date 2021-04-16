@@ -11,16 +11,20 @@ namespace StoreTesting
         public string Name { get; set; }
         public string Code { get; set; }
         public string Quantity { get; set; }
+        public string Price { get; set; }
         public string DateFrom { get; set; }
         public string DateTo { get; set; }
 
-        public CreateProduct(string name, string dateFrom, string dateTo)
+
+
+        public CreateProduct(string name)
         {
             Name = name;
             Code = GetCodeProduct();
-            Quantity = GetRandomQuantity();
-            DateFrom = dateFrom;
-            DateTo = dateTo;
+            Quantity = GetRandomNumber();
+            Price = GetRandomNumber();
+            DateFrom = GetRandomDate().Split(':')[0];
+            DateTo = GetRandomDate().Split(':')[1];
 
         }
 
@@ -31,14 +35,11 @@ namespace StoreTesting
 
         private string GetRandomDate()
         {
-            DateTime date = new DateTime();
-            date = DateTime.Now.AddMonths(-1);
-            //date.ToShortDateString()
-
-            DateTime.Today.ToShortDateString();
-            return null;
+            string dtFrom = DateTime.Now.ToString("yyyy-MM-dd");
+            string dtTo = DateTime.Now.AddMonths(+ new Random().Next(1,7)).ToString("yyyy-MM-dd");
+            return $"{dtFrom}:{dtTo}";
         }
-        private string GetRandomQuantity()
+        private string GetRandomNumber()
         {
             return $"{Convert.ToString(new Random().Next(1, 200))}";
         }

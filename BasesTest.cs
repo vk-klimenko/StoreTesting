@@ -104,9 +104,6 @@ namespace StoreTesting
                 return false;
             }
         }
-
-        
-        
         /// <summary>
         /// Авторизация в админ панель
         /// </summary>
@@ -196,7 +193,6 @@ namespace StoreTesting
             
             return countryList.SequenceEqual(countryListSort); 
         }
-
         /// <summary>
         /// Нажать на кнопку
         /// </summary>
@@ -240,11 +236,28 @@ namespace StoreTesting
         /// </summary>
         /// <param name="locator">Локатор</param>
         /// <param name="value">Значение</param>
-        protected void SetValueFromJS(By locator, string value)
+        /// /// <param name="property">Название параметра</param>
+        protected void SetValueFromJS(By locator, string value, string property)
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript($"arguments[0].value = '{value}'", driver.FindElement(locator));
+            js.ExecuteScript($"arguments[0].{property} = '{value}'", driver.FindElement(locator));
         }
 
+        /// <summary>
+        /// Ввод текста
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <param name="text">Текст</param>
+        /// <param name="clear">Очистить перед вставкой текста</param>
+        protected void InputText(By locator, string text, bool clear = true)
+        {
+            if (clear)
+                driver.FindElement(locator).Clear();
+            driver.FindElement(locator).Click();
+            driver.FindElement(locator).SendKeys(text);
+
+        }
+
+        
     }
 }

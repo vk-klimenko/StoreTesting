@@ -146,6 +146,9 @@ namespace StoreTesting
         [Test]
         public void AddProduct()
         {
+
+
+            
             // Сделайте сценарий для добавления нового товара(продукта) в учебном приложении litecart(в админке).
             // Для добавления товара нужно открыть меню Catalog, в правом верхнем углу нажать кнопку "Add New Product", 
             // заполнить поля с информацией о товаре и сохранить.
@@ -170,9 +173,9 @@ namespace StoreTesting
             driver.FindElement(By.XPath(".//td[@id='content']//*[.=' Add New Product']")).Click();
 
 
-            CreateProduct product = new CreateProduct("Ball", "2020-05-25", "2021-05-29");
+            CreateProduct product = new CreateProduct("Ball");
 
-            // 3. Заполняемвкладки General, Information и Prices и сохраняем. Скидки(Campains) на вкладке Prices можно не добавлять
+            // 3.1. Вкладка General Information и Prices и сохраняем. Скидки(Campains) на вкладке Prices можно не добавлять
 
             // General
 
@@ -192,7 +195,7 @@ namespace StoreTesting
             driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='product_groups[]' and @value='1-{Convert.ToString(new Random().Next(1, 4))}']")).Click();
 
             // Quantity
-            SetValueFromJS(By.Name("quantity"), product.Quantity);
+            SetValueFromJS(By.Name("quantity"), product.Quantity, "value");
 
             // Quantity Unit <select name="quantity_unit_id" data-size="auto"> SelectElementByValue=1
             DropDownList(By.XPath(".//select[@name='quantity_unit_id']"), "1");
@@ -207,10 +210,63 @@ namespace StoreTesting
             UpLoadFile(By.XPath(".//input[@name='new_images[]']"), @"C:\icon.png");
 
             // Date from
-            SetValueFromJS(By.Name("date_valid_from"), "2000-05-27");
+            SetValueFromJS(By.Name("date_valid_from"), product.DateFrom, "value");
 
             // Date to
-            SetValueFromJS(By.Name("date_valid_to"), "2000-11-27");
+            SetValueFromJS(By.Name("date_valid_to"), product.DateTo, "value");
+
+            // Button Save
+            PressButton(By.XPath(".//span[@class='button-set']/button[@name='save']"));
+
+            // Переход на вкладку Information
+            PressButton(By.XPath(".//ul[@class='index']/li/a[.='Information']"));
+
+
+            // 3.2. Вкладка Information
+
+            // Manufacturer
+            DropDownList(By.XPath(".//div[@id='tab-information']//select[@name='manufacturer_id']"), "1");
+
+            // Keywords
+            InputText(By.XPath(".//div[@id='tab-information']//input[@name='keywords']"), "AAA, BBB, CCC, DDD, EEE");
+
+            // Short Description
+            InputText(By.XPath(".//div[@id='tab-information']//input[@name='short_description[en]']"), "This is a very necessary thing");
+
+            // Description
+            InputText(By.XPath(".//div[@id='tab-information']//textarea[@name='description[en]']"), 
+                        @"Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+                        when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                        It has survived not only five centuries, but also the leap into electronic typesetting, 
+                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset 
+                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like 
+                        Aldus PageMaker including versions of Lorem Ipsum."
+                        );
+
+            // Head Title
+            InputText(By.XPath(".//div[@id='tab-information']//input[@name='head_title[en]']"), "Rubber ball");
+
+            // Meta Description
+            InputText(By.XPath(".//div[@id='tab-information']//input[@name='meta_description[en]']"), "This is meta description");
+
+            // Button Save
+            PressButton(By.XPath(".//span[@class='button-set']/button[@name='save']"));
+
+            // Переход на вкладку Prices
+            PressButton(By.XPath(".//ul[@class='index']/li/a[.='Prices']"));
+
+            // 3.3. Вкладка Prices
+
+            // Purchase Price
+            SetValueFromJS(By.Name("purchase_price"), product.Price, "value");
+            
+            // Select currency
+            DropDownList(By.XPath(".//select[@name='purchase_price_currency_code']"), "EUR");
+
+            // Price	Price Incl. Tax (?)
+            SetValueFromJS(By.Name("gross_prices[USD]"), Convert.ToString(new Random().Next(1, 500)), "placeholder");
+            SetValueFromJS(By.Name("gross_prices[USD]"), Convert.ToString(new Random().Next(1, 500)), "placeholder");
 
             // Button Save
             PressButton(By.XPath(".//span[@class='button-set']/button[@name='save']"));
