@@ -149,7 +149,6 @@ namespace StoreTesting
             }
             
         }
-
         /// <summary>
         /// Проверяем, что страны расположены в алфавитном порядке.
         /// </summary>
@@ -242,7 +241,6 @@ namespace StoreTesting
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
             js.ExecuteScript($"arguments[0].{property} = '{value}'", driver.FindElement(locator));
         }
-
         /// <summary>
         /// Ввод текста
         /// </summary>
@@ -257,7 +255,23 @@ namespace StoreTesting
             driver.FindElement(locator).SendKeys(text);
 
         }
-
-        
+        /// <summary>
+        /// Проверка товара к каталоге
+        /// </summary>
+        /// <param name="products">Список товаров</param>
+        /// <param name="name">Названиетовара, который ищем в каталоге</param>
+        /// <returns>Возвращает true, если товар найден.</returns>
+        protected bool IsProductInCatalog(IList<IWebElement> products, string name)
+        {
+            bool result = false;
+            foreach (IWebElement product in products)
+            {
+                if (product.GetAttribute("textContent").Trim() == name.Trim())
+                    result = true;
+                else
+                    continue;
+            }
+            return result;
+        }
     }
 }

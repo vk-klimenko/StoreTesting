@@ -15,7 +15,7 @@ namespace StoreTesting
         public string DateFrom { get; set; }
         public string DateTo { get; set; }
 
-
+        
 
         public CreateProduct(string name)
         {
@@ -23,11 +23,11 @@ namespace StoreTesting
             Code = GetCodeProduct();
             Quantity = GetRandomNumber();
             Price = GetRandomNumber();
-            DateFrom = GetRandomDate().Split(':')[0];
-            DateTo = GetRandomDate().Split(':')[1];
-
+            string date = GetRandomDate();
+            DateFrom = date.Split(':')[0];
+            DateTo = date.Split(':')[1];
         }
-
+        
         private string GetCodeProduct()
         {
             return new Random().Next(1000, 9999).ToString();
