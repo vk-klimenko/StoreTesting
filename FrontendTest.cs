@@ -138,7 +138,7 @@ namespace StoreTesting
             //Проверки можно никакие не делать, только действия - заполнение полей, нажатия на кнопки и ссылки.Если сценарий дошёл до конца, то есть созданный пользователь смог выполнить вход и выход-- значит создание прошло успешно.
 
             driver.Navigate().GoToUrl($"{baseUrl}en/create_account");
-            CreateUsers user = new CreateUsers("John", "Travolta", "Avenyu 99", "password2", "New-York");
+            CreateUsers user = new CreateUsers("Phill", "Nevell", "Mankheton 77", "password2", "Las-Vegas");
 
             // 1. Запонение формы
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[2]/td[1]/input[@name='firstname']"), user.FirstName);
@@ -156,8 +156,9 @@ namespace StoreTesting
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[4]/td[2]/input[@name='city']"), user.City);
             Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[4]/td[2]/input[@name='city']")).GetAttribute("value"));
 
-            DropDownList(By.XPath(".//select[@name='country_code']"), "US");
-            DropDownList(By.XPath(".//select[@name='zone_code']"), new Random().Next(1, 65));
+            //DropDownList(By.CssSelector("select[name='country_code']"), "US");
+            SetValueFromJS(By.CssSelector("select[name='country_code']"), "US", "value");
+            DropDownList(By.CssSelector("select[name='zone_code']"), new Random().Next(1, 65));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[6]/td[1]/input[@name='email']"), user.Email);
             Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[6]/td[1]/input[@name='email']")).GetAttribute("value"));

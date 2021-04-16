@@ -7,7 +7,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support;
 using OpenQA.Selenium.Support.UI;
-
+using OpenQA.Selenium.Firefox;
 
 namespace StoreTesting
 {
@@ -15,12 +15,13 @@ namespace StoreTesting
     {
         protected IWebDriver driver;
         protected string baseUrl = "http://litecart/";
-       
+        
 
         [SetUp]
         public void Start()
         {
             driver = new ChromeDriver();
+            //driver = new FirefoxDriver();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         }
 
@@ -210,6 +211,7 @@ namespace StoreTesting
         protected void DropDownList(By locator, string selectValue)
         {
             SelectElement selectElement = new SelectElement(driver.FindElement(locator));
+            
             selectElement.SelectByValue(selectValue);
         }
         /// <summary>
@@ -240,7 +242,7 @@ namespace StoreTesting
         protected void SetValueFromJS(By locator, string value, string property)
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript($"arguments[0].{property} = '{value}'", driver.FindElement(locator));
+            js.ExecuteScript($"arguments[0].{property} = '{value}', arguments[0].dispatchEvent(new Event('change'))", driver.FindElement(locator));
         }
 
         /// <summary>
