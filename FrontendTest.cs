@@ -226,12 +226,12 @@ namespace StoreTesting
 
             // 1.
             driver.Navigate().GoToUrl(baseUrl);
-            
-            
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
 
             // 2. 
             //
-            wait.Until(driver => driver.FindElement(By.Id("box-most-popular")));
+            wait.Until(driver => driver.FindElement(By.CssSelector("#box-most-popular")));
             
             // url товара
             string url_1 = driver.FindElement(By.CssSelector("#box-most-popular ul li a.link")).GetAttribute("href").Trim();
@@ -254,7 +254,8 @@ namespace StoreTesting
             // 3. Переход на главную страницу
             driver.Navigate().GoToUrl(baseUrl);
             // Ожидаем title
-            wait.Until(ExpectedConditions.TitleIs("Online Store | E-Shop"));
+            //wait.Until(ExpectedConditions.TitleIs("Online Store | E-Shop"));
+            wait.Until(driver => driver.FindElement(By.CssSelector("head title")).Text == "Online Store | My Store");
 
             // Ждем элемента "box-most-popular"
             wait.Until(driver => driver.FindElement(By.Id("box-most-popular")));
