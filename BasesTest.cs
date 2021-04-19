@@ -14,6 +14,7 @@ namespace StoreTesting
     public class BasesTest
     {
         protected IWebDriver driver;
+        protected WebDriverWait wait;
         protected string baseUrl = "http://litecart/";
         
 
@@ -231,7 +232,7 @@ namespace StoreTesting
         /// <param name="path">Путь к файлу</param>
         protected void UpLoadFile(By locator, string path)
         {
-            driver.FindElement(locator).SendKeys(path);
+            driver.FindElement(locator).SendKeys(Path.GetFullPath(path));
         }
         /// <summary>
         /// Установка значения value, с помощью JS

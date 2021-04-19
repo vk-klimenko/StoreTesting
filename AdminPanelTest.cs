@@ -17,7 +17,7 @@ namespace StoreTesting
         /// Авторизация в админ панель
         /// </summary>
         [Test]
-        public void LoginAdminPanel()
+        public void LoginAdminPanelTest()
         {
             AdminPanelAuth("admin", "admin");
         }
@@ -26,7 +26,7 @@ namespace StoreTesting
         /// Авторизация в админ панель и чекбокс запомнить пользователя
         /// </summary>
         [Test]
-        public void LoginRememberAdminPanel()
+        public void LoginRememberAdminPanelTest()
         {
             AdminPanelAuth("admin", "admin", true);
         }
@@ -35,7 +35,7 @@ namespace StoreTesting
         /// Выход из админ панели
         /// </summary>
         [Test]
-        public void LogOutAdminPanel()
+        public void LogOutAdminPanelTest()
         {
             AdminPanelLogout("admin", "admin");
         }
@@ -44,7 +44,7 @@ namespace StoreTesting
         /// Клик по левому сайдбару и проверка H1
         /// </summary>
         [Test]
-        public void LoginAdminPanelMenuSelect()
+        public void LoginAdminPanelMenuSelectTest()
         {
             AdminPanelAuth("admin", "admin"); 
             IList<IWebElement> rows = driver.FindElement(By.CssSelector("ul#box-apps-menu")).FindElements(By.CssSelector("li#app-"));
@@ -79,7 +79,7 @@ namespace StoreTesting
         /// Проверка сортировки стран
         /// </summary>
         [Test]
-        public void CheckingSortCountries()
+        public void CheckingSortCountriesTest()
         {
             AdminPanelAuth("admin", "admin");
 
@@ -103,7 +103,7 @@ namespace StoreTesting
         /// Проверка сортировки геозон
         /// </summary>
         [Test]
-        public void CheckingSortGeo()
+        public void CheckingSortGeoTest()
         {
             AdminPanelAuth("admin", "admin");
 
@@ -145,7 +145,7 @@ namespace StoreTesting
         /// Cценарий добавления товара
         /// </summary>
         [Test]
-        public void AddProduct()
+        public void AddProductTest()
         {
 
             // Сделайте сценарий для добавления нового товара(продукта) в учебном приложении litecart(в админке).
@@ -206,7 +206,7 @@ namespace StoreTesting
             DropDownList(By.XPath(".//select[@name='sold_out_status_id']"), Convert.ToString(new Random().Next(1,3)));
             
             // Upload Images
-            UpLoadFile(By.XPath(".//input[@name='new_images[]']"), @"C:\icon.png");
+            UpLoadFile(By.XPath(".//input[@name='new_images[]']"), @"\icon.png");
 
             // Date from
             SetValueFromJS(By.Name("date_valid_from"), product.DateFrom, "value");
@@ -241,7 +241,7 @@ namespace StoreTesting
                         );
 
             // Head Title
-            InputText(By.XPath(".//div[@id='tab-information']//input[@name='head_title[en]']"), "Rubber ball");
+            InputText(By.XPath(".//div[@id='tab-information']//input[@name='head_title[en]']"), "Head title");
 
             // Meta Description
             InputText(By.XPath(".//div[@id='tab-information']//input[@name='meta_description[en]']"), "This is meta description");

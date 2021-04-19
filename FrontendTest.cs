@@ -18,7 +18,7 @@ namespace StoreTesting
         /// Наличие стикеров на товарах
         /// </summary>
         [Test]
-        public void AvailabilityStickersOnGoods()
+        public void AvailabilityStickersOnGoodsTest()
         {
             driver.Url = $"{baseUrl}rubber-ducks-c-1/";
             string locator = ".//div[@id='box-category']//ul[contains(@class,'products')]/li";
@@ -41,7 +41,7 @@ namespace StoreTesting
         /// Проверить, что открывается правильная страница товара 
         /// </summary> 
         [Test]
-        public void CheckCorrectProductPage()
+        public void CheckCorrectProductPageTest()
         {
             driver.Url = baseUrl;
             
@@ -126,7 +126,7 @@ namespace StoreTesting
         /// Сценарий регистрации новых пользователей
         /// </summary>
         [Test]
-        public void UserRegistration()
+        public void UserRegistrationTest()
         {
             // Сценарий должен состоять из следующих частей:
             //1) регистрация новой учётной записи с достаточно уникальным адресом электронной почты(чтобы не конфликтовало с ранее созданными пользователями, в том числе при предыдущих запусках того же самого сценария),
@@ -138,7 +138,7 @@ namespace StoreTesting
             //Проверки можно никакие не делать, только действия - заполнение полей, нажатия на кнопки и ссылки.Если сценарий дошёл до конца, то есть созданный пользователь смог выполнить вход и выход-- значит создание прошло успешно.
 
             driver.Navigate().GoToUrl($"{baseUrl}en/create_account");
-            CreateUsers user = new CreateUsers("Phill", "Nevell", "Mankheton 77", "password2", "Las-Vegas");
+            CreateUsers user = new CreateUsers("Masha", "Sasha", "Mankheton 77", "password2", "Las-Vegas");
 
             // 1. Запонение формы
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[2]/td[1]/input[@name='firstname']"), user.FirstName);
@@ -156,8 +156,13 @@ namespace StoreTesting
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[4]/td[2]/input[@name='city']"), user.City);
             Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[4]/td[2]/input[@name='city']")).GetAttribute("value"));
 
-            //DropDownList(By.CssSelector("select[name='country_code']"), "US");
-            SetValueFromJS(By.CssSelector("select[name='country_code']"), "US", "value");
+            // ---------------------------------------------------------------------------------------------------
+            // Клик по элементу выпадающего списка
+            driver.FindElement(By.CssSelector("span [role='presentation']")).Click();
+            // В откр. списке ищем поле ввода
+            driver.FindElement(By.CssSelector("input.select2-search__field")).SendKeys("United States" + Keys.Enter);
+            // ---------------------------------------------------------------------------------------------------
+            
             DropDownList(By.CssSelector("select[name='zone_code']"), new Random().Next(1, 65));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[6]/td[1]/input[@name='email']"), user.Email);
@@ -201,6 +206,119 @@ namespace StoreTesting
 
             // Проверяем, что вышли под пользователем
             Assert.IsTrue(driver.FindElement(By.XPath(".//div[@id='box-account-login']/h3[@class='title']")).GetAttribute("textContent") == "Login");
+        }
+
+        /// <summary>
+        /// Сценарий работы корзины.
+        /// </summary>
+        [Test]
+        public void WorkingShopCartTest()
+        {
+            //  Сделайте сценарий для добавления товаров в корзину и удаления товаров из корзины.
+
+            //1) открыть главную страницу
+            //2) открыть первый товар из списка
+            //2) добавить его в корзину(при этом может случайно добавиться товар, который там уже есть, ничего страшного)
+            //3) подождать, пока счётчик товаров в корзине обновится
+            //4) вернуться на главную страницу, повторить предыдущие шаги ещё два раза, чтобы в общей сложности в корзине было 3 единицы товара
+            //5) открыть корзину(в правом верхнем углу кликнуть по ссылке Checkout)
+            //6) удалить все товары из корзины один за другим, после каждого удаления подождать, пока внизу обновится таблица
+
+            // 1.
+            driver.Navigate().GoToUrl(baseUrl);
+            
+            
+
+            // 2. 
+            //
+            wait.Until(driver => driver.FindElement(By.Id("box-most-popular")));
+            
+            // url товара
+            string url_1 = driver.FindElement(By.CssSelector("#box-most-popular ul li a.link")).GetAttribute("href").Trim();
+            driver.Navigate().GoToUrl(url_1);
+
+            // Ждем проверка текста на кнопке 'add_cart_product'
+            IWebElement el = driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']"));
+            wait.Until(ExpectedConditions.TextToBePresentInElement(el, el.GetAttribute("textContent")));
+
+
+            // Получаем количество товара в корзине 
+            int item = Convert.ToInt32(driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent").Trim());
+            // Добавляем в корзину товар
+            driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']")).Click();
+            // Увеличиваем на 1 количество товара в корзине
+            item += 1;
+            // Ждем пока счетчик в корзине обновиться
+            wait.Until(driver => driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent") == Convert.ToString(item));
+
+            // 3. Переход на главную страницу
+            driver.Navigate().GoToUrl(baseUrl);
+            // Ожидаем title
+            wait.Until(ExpectedConditions.TitleIs("Online Store | E-Shop"));
+
+            // Ждем элемента "box-most-popular"
+            wait.Until(driver => driver.FindElement(By.Id("box-most-popular")));
+            // Получаем УРЛ товара
+            string url_2 = driver.FindElement(By.CssSelector("#box-most-popular ul li a.link")).GetAttribute("href").Trim();
+            driver.Navigate().GoToUrl(url_2);
+
+            //Ожидаем кнопки Add to cart
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#box-product [name='add_cart_product']")));
+            // Получаем количество товара в корзине 
+            int item2 = Convert.ToInt32(driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent").Trim());
+            // Добавляем в корзину товар
+            driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']")).Click();
+            // Увеличиваем на 1 количество товара в корзине
+            item2 += 1;
+            // Ждем пока счетчик в корзине обновиться
+            wait.Until(driver => driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent") == Convert.ToString(item2));
+
+            /* =================================================================================================================== */
+
+            // Переход на главную страницу
+            driver.Navigate().GoToUrl(baseUrl);
+            // 
+            wait.Until(ExpectedConditions.UrlContains(baseUrl));
+
+            // Ждем элемента "box-most-popular"
+            wait.Until(driver => driver.FindElement(By.Id("box-most-popular")));
+            // Получаем УРЛ товара
+            string url_3 = driver.FindElement(By.CssSelector("#box-most-popular ul li a.link")).GetAttribute("href").Trim();
+            driver.Navigate().GoToUrl(url_3);
+
+            //Ожидаем кнопки Add to cart
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#box-product [name='add_cart_product']")));
+            // Получаем количество товара в корзине 
+            int item3 = Convert.ToInt32(driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent").Trim());
+            // Добавляем в корзину товар
+            driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']")).Click();
+            // Увеличиваем на 1 количество товара в корзине
+            item3 += 1;
+            // Ждем пока счетчик в корзине обновиться
+            wait.Until(driver => driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent") == Convert.ToString(item3));
+
+            /* =================================================================================================================== */
+            // Переход на главную страницу
+            driver.Navigate().GoToUrl(baseUrl);
+           
+            // Переходим в корзину. Ожидаем элемент "корзина"
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#cart")));
+
+            // Кликаем по Checkout
+            driver.FindElement(By.CssSelector("#cart a.link")).Click();
+            
+            // Ожидаем появления таблицы с товарами
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#order_confirmation-wrapper")));
+
+            // Удаляем товары.
+           
+            foreach(IWebElement tovar in driver.FindElements(By.CssSelector("#box-checkout-cart ul.shortcuts li")))
+            {
+                driver.FindElement(By.Name("remove_cart_item")).Click();
+                wait.Until(ExpectedConditions.StalenessOf(tovar));
+            }
+
+
         }
 
     }
