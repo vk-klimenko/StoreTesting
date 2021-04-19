@@ -172,7 +172,7 @@ namespace StoreTesting
             // click add new product
             driver.FindElement(By.XPath(".//td[@id='content']//*[.=' Add New Product']")).Click();
 
-            CreateProduct product = new CreateProduct("Bannan");
+            CreateProduct product = new CreateProduct("Milk");
             // 3.1. Вкладка General Information и Prices и сохраняем. Скидки(Campains) на вкладке Prices можно не добавлять
 
             // General
@@ -229,16 +229,8 @@ namespace StoreTesting
             // Short Description
             InputText(By.XPath(".//div[@id='tab-information']//input[@name='short_description[en]']"), "This is a very necessary thing");
 
-            // Description
-            InputText(By.XPath(".//div[@id='tab-information']//textarea[@name='description[en]']"), 
-                        @"Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-                        when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-                        It has survived not only five centuries, but also the leap into electronic typesetting, 
-                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset 
-                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like 
-                        Aldus PageMaker including versions of Lorem Ipsum."
-                        );
+            // Description      ".//div[@id='tab-information']//textarea[@name='description[en]']"
+            InputText(By.XPath(".//div[@class='trumbowyg-editor']"), @"Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.");
 
             // Head Title
             InputText(By.XPath(".//div[@id='tab-information']//input[@name='head_title[en]']"), "Head title");
@@ -267,7 +259,7 @@ namespace StoreTesting
             driver.FindElement(By.Id("add-campaign")).Click();
 
             SetValueFromJS(By.Name("campaigns[new_1][start_date]"), $"{product.DateFrom}T12:00", "value");
-            SetValueFromJS(By.Name("campaigns[new_1][end_date]"), $"{product.DateTo}T:23:00", "value");
+            SetValueFromJS(By.Name("campaigns[new_1][end_date]"), $"{product.DateTo}T23:00", "value");
             SetValueFromJS(By.Name("campaigns[new_1][percentage]"), Convert.ToString(new Random().Next(10, 50)), "value");
             SetValueFromJS(By.Name("campaigns[new_1][USD]"), Convert.ToString(new Random().Next(10, 500)), "value");
             SetValueFromJS(By.Name("campaigns[new_1][EUR]"), Convert.ToString(new Random().Next(10, 400)), "value");

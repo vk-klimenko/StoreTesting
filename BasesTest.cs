@@ -24,6 +24,7 @@ namespace StoreTesting
             driver = new ChromeDriver();
             //driver = new FirefoxDriver();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            
         }
 
         [TearDown]

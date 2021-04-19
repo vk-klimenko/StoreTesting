@@ -162,7 +162,7 @@ namespace StoreTesting
             // В откр. списке ищем поле ввода
             driver.FindElement(By.CssSelector("input.select2-search__field")).SendKeys("United States" + Keys.Enter);
             // ---------------------------------------------------------------------------------------------------
-            
+
             DropDownList(By.CssSelector("select[name='zone_code']"), new Random().Next(1, 65));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[6]/td[1]/input[@name='email']"), user.Email);
