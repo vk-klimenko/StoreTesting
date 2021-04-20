@@ -224,149 +224,62 @@ namespace StoreTesting
             6. Удалить все товары из корзины один за другим, после каждого удаления подождать, пока внизу обновится таблица
             */
 
-            /* =================================================   1     ============================================================ */
-
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-            driver.Navigate().GoToUrl(baseUrl);
-            
-            // Ожидание
-            wait.Until(driver => driver.FindElement(By.CssSelector("#box-most-popular")));
-            
-            // Переходим в карточку товара
-            string url = driver.FindElement(By.CssSelector("#box-most-popular ul li a.link")).GetAttribute("href").Trim();
-            driver.Navigate().GoToUrl(url);
+            int item = 0;
 
-            // Ожидание текста на кнопке.
-            IWebElement textButton = driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']"));
-            wait.Until(ExpectedConditions.TextToBePresentInElement(textButton, textButton.GetAttribute("textContent")));
-
-            /* =================================================   2    ============================================================ */
-
-            // Получаем количество товара в корзине 
-            int item = Convert.ToInt32(driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent").Trim());
-
-            // Если нужно выбрать размер товра
-            if (IsElementBoolen(By.Name("options[Size]")))
+            for (int i = 0; i < 3; i++)
             {
-                SelectElement select = new SelectElement(driver.FindElement(By.Name("options[Size]")));
-                select.SelectByIndex(new Random().Next(1, 4));
+                driver.Navigate().GoToUrl(baseUrl);
+                
+                // Ожидание. Блок "Популярные товары"
+                wait.Until(driver => driver.FindElement(By.CssSelector("#box-most-popular")));
+
+                // Переход на карточку товара
+                driver.Navigate().GoToUrl(driver.FindElement(By.CssSelector("#box-most-popular ul li a.link")).GetAttribute("href").Trim());
+
+                // Ожидание. Появление текста на кнопке.
+                IWebElement textButton = driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']"));
+                wait.Until(ExpectedConditions.TextToBePresentInElement(textButton, textButton.GetAttribute("textContent")));
+
+                // Получаем количество товара в корзине 
+                item = Convert.ToInt32(driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent").Trim());
+
+                // Если нужно выбрать размер товара
+                if (IsElementBoolen(By.Name("options[Size]")))
+                {
+                    SelectElement select = new SelectElement(driver.FindElement(By.Name("options[Size]")));
+                    select.SelectByIndex(new Random().Next(1, 4));
+                }
+                // Добавляем товар в корзину.
+                driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']")).Click();
+
+                // Ожидание изменения кол-ва товара в корзине.
+                item += 1;
+                wait.Until(driver => driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent") == Convert.ToString(item));
+            
             }
-
-            // Добавляем товар в корзину.
-            driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']")).Click();
-            
-            // Увеличиваем на 1 количество товара в корзине
-            item += 1;
-
-            /* =================================================   3    ============================================================ */
-
-            // Ожидание изменения кол-ва товара в корзине.
-            wait.Until(driver => driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent") == Convert.ToString(item));
-
-
-            /* =================================================   4    ============================================================ */
-            // Переход на главную страницу и повторяем предыдущие шаги.
-
-            driver.Navigate().GoToUrl(baseUrl);
-
-            // Ожидаем title
-            //wait.Until(ExpectedConditions.TitleIs("Online Store | E-Shop"));
-            wait.Until(driver => driver.FindElement(By.CssSelector("head title")).GetAttribute("textContent") == "Online Store | E-Shop");
-
-            // Ожидаем элемента "box-most-popular"
-            wait.Until(driver => driver.FindElement(By.Id("box-most-popular")));
-            
-            // Получаем УРЛ товара
-            url = driver.FindElement(By.CssSelector("#box-most-popular ul li a.link")).GetAttribute("href").Trim();
-            driver.Navigate().GoToUrl(url);
-
-            //Ожидаем кнопки Add to cart
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#box-product [name='add_cart_product']")));
-            
-            // Получаем количество товара в корзине 
-            item = Convert.ToInt32(driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent").Trim());
-            
-            // Если нужно выбрать размер товра
-            if(IsElementBoolen(By.Name("options[Size]")))
-            {
-                SelectElement select = new SelectElement(driver.FindElement(By.Name("options[Size]")));
-                select.SelectByIndex(new Random().Next(1, 4));
-            }
-
-            // Добавляем в корзину товар
-            driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']")).Click();
-            
-            // Увеличиваем на 1 количество товара в корзине
-            item += 1;
-
-            // Ждем пока счетчик в корзине обновиться
-            wait.Until(driver => driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent") == Convert.ToString(item));
-
-            /* =================================================================================================================== */
-
-            // Переход на главную страницу
-            driver.Navigate().GoToUrl(baseUrl);
-            // 
-            wait.Until(ExpectedConditions.UrlContains(baseUrl));
-
-            // Ждем элемента "box-most-popular"
-            wait.Until(driver => driver.FindElement(By.Id("box-most-popular")));
-            
-            // Получаем УРЛ товара
-            url = driver.FindElement(By.CssSelector("#box-most-popular ul li a.link")).GetAttribute("href").Trim();
-            driver.Navigate().GoToUrl(url);
-
-            //Ожидаем кнопки Add to cart
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#box-product [name='add_cart_product']")));
-            
-            // Получаем количество товара в корзине 
-            item = Convert.ToInt32(driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent").Trim());
-
-            // Если нужно выбрать размер товра
-            if (IsElementBoolen(By.Name("options[Size]")))
-            {
-                SelectElement select = new SelectElement(driver.FindElement(By.Name("options[Size]")));
-                select.SelectByIndex(new Random().Next(1, 4));
-            }
-
-            // Добавляем в корзину товар
-            driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']")).Click();
-            
-            // Увеличиваем на 1 количество товара в корзине
-            item += 1;
-            
-            // Ждем пока счетчик в корзине обновиться
-            wait.Until(driver => driver.FindElement(By.CssSelector("#cart a.content span.quantity")).GetAttribute("textContent") == Convert.ToString(item));
-
-            /* ===================================================     5         ===================================================== */
-            // Переход в корзину.
 
             // Переход на главную страницу
             driver.Navigate().GoToUrl(baseUrl);
            
-            // Переходим в корзину. Ожидаем элемент "корзина"
+            // Ожидание. Элемент "корзина"
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#cart")));
-
-            // Кликаем по Checkout
             driver.FindElement(By.CssSelector("#cart a.link")).Click();
             
             // Ожидание. Список товаров.
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#box-checkout-summary td.item")));
-
-            /* ===================================================     6         ===================================================== */
-            // Удаляем Все товары.
-
+            
             // Нажать на "карусель", чтобы не крутились товары
-            if(IsElementBoolen(By.CssSelector("#box-checkout-cart ul.shortcuts li")))
+            if (IsElementBoolen(By.CssSelector("#box-checkout-cart ul.shortcuts li")))
                 driver.FindElement(By.CssSelector("#box-checkout-cart ul.shortcuts li")).Click();
 
             IList<IWebElement> products = driver.FindElements(By.CssSelector("#box-checkout-summary td.item"));
             foreach (IWebElement product in products)
             {
                 
-                wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#box-checkout-summary td.item")));
-                // Нажать удалить товар.
-                driver.FindElement(By.Name("remove_cart_item")).Click();
+                wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button[name='remove_cart_item']")));
+                driver.FindElement(By.CssSelector("button[name='remove_cart_item']")).Click();
+                
                 // Ожидание обновления таблицы
                 wait.Until(ExpectedConditions.StalenessOf(product));
             }
