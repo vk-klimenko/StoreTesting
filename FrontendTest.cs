@@ -274,16 +274,18 @@ namespace StoreTesting
                 driver.FindElement(By.CssSelector("#box-checkout-cart ul.shortcuts li")).Click();
 
             IList<IWebElement> products = driver.FindElements(By.CssSelector("#box-checkout-summary td.item"));
-            foreach (IWebElement product in products)
-            {
-                
-                wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button[name='remove_cart_item']")));
-                driver.FindElement(By.CssSelector("button[name='remove_cart_item']")).Click();
-                
-                // Ожидание обновления таблицы
-                wait.Until(ExpectedConditions.StalenessOf(product));
-            }
 
+            for (int i = 0; i < products.Count; i++)
+            {
+                //1. найти старый элемент
+                wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#box-checkout-summary td.item")));
+                // 2.
+                driver.FindElement(By.CssSelector("button[name='remove_cart_item']")).Click();
+                // 3.
+                wait.Until(ExpectedConditions.StalenessOf(products[i]));
+                // 4. 
+                products = driver.FindElements(By.CssSelector("#box-checkout-summary td.item"));
+            }
             
         }
 

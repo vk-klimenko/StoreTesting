@@ -302,10 +302,36 @@ namespace StoreTesting
             Не забудьте, что новое окно открывается не мгновенно, поэтому требуется ожидание открытия окна.
             */
 
+            
+            //
 
-            // #content table tr:nth-child(n+2)
+            AdminPanelAuth("admin", "admin");
+
+            driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//span[@class='name' and text()='Countries']")).Click();
+            driver.Navigate().GoToUrl("http://litecart/admin/?app=countries&doc=edit_country&country_code=IS");
+
+            string mainWindowId = driver.CurrentWindowHandle;
+            ICollection<string> existWIndows = driver.WindowHandles;
 
 
+            IList<IWebElement> listUrls = driver.FindElements(By.CssSelector("#content a:nth-child(n+2)[target='_blank']"));
+            Assert.IsTrue(AreElementsPresent(By.CssSelector("#content a:nth-child(n+2)[target='_blank']")));
+
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript("window.open()");
+
+            // Ожидание появления окна
+            
+            wait.Until(ThereIsWindowOtherThan(existWIndows));
+        }
+
+        private Func<IWebDriver, string> ThereIsWindowOtherThan(ICollection<string> existWIndows)
+        {
+            ICollection<string> nowOpenWindow = driver.WindowHandles;
+            
+            return null;
         }
     }
+
+   
 }

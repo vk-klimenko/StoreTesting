@@ -21,8 +21,8 @@ namespace StoreTesting
         [SetUp]
         public void Start()
         {
-            driver = new ChromeDriver();
-            //driver = new FirefoxDriver();
+            //driver = new ChromeDriver();
+            driver = new FirefoxDriver();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             
         }
@@ -280,6 +280,9 @@ namespace StoreTesting
             }
             return result;
         }
+
+
+        
 
     }
 }
