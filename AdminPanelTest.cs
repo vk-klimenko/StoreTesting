@@ -302,6 +302,8 @@ namespace StoreTesting
             Не забудьте, что новое окно открывается не мгновенно, поэтому требуется ожидание открытия окна.
             */
 
+            /*-------------------------------------------------------------------------------*/
+
             AdminPanelAuth("admin", "admin");
 
             driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//span[@class='name' and text()='Countries']")).Click();
@@ -314,67 +316,48 @@ namespace StoreTesting
             IList<IWebElement> listUrls = driver.FindElements(By.CssSelector("#content a:nth-child(n+2)[target='_blank']"));
             Assert.IsTrue(AreElementsPresent(By.CssSelector("#content a:nth-child(n+2)[target='_blank']")));
 
-            foreach (IWebElement url in listUrls)
+            foreach (IWebElement el in listUrls)
             {
+                string url = el.GetAttribute("href").Trim();
                 IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
                 js.ExecuteScript("window.open()");
 
                 // Ожидание появления окна
                 //wait.Until(ThereIsWindowOtherThan(existWindows));
 
-                WaitNewWindow(existWindows);
-
-
-                driver.SwitchTo().Window("NEW ID");
-                Assert.IsTrue(driver.CurrentWindowHandle == "NEW ID");
+                string id = "";
+                while (true)
+                {
+                    ICollection<string> nowOpenWindow = driver.WindowHandles;
+                    if (nowOpenWindow.Count() > existWindows.Count())
+                    {
+                        //nowOpenWindow.ToList().RemoveAll(existWindows.ToList().Contains);
+                        foreach (var item in nowOpenWindow)
+                        {
+                            if (item != existWindows.First())
+                                id = item;
+                        }
+                        break;
+                    }
+                }
+                /* ------------------------------------------------------------------------------- */
+                driver.SwitchTo().Window(id);
+                Assert.IsTrue(driver.CurrentWindowHandle == id);
+                driver.Navigate().GoToUrl(url);
 
                 driver.Close();
 
                 driver.SwitchTo().Window(mainWindowId);
             }
-
-
-
-
-
-
-
-
+        
         }
 
-        private bool WaitNewWindow(ICollection<string> existWindows)
-        {
-            bool result = true;
-            while (result)
-            {
-                IList<string> nowOpenWindow = driver.WindowHandles;
-                if(nowOpenWindow.Count() > existWindows.Count())
-                {
-                    
-                }
-
-            }
-            return result;
-        }
+       
 
         //private Func<IWebDriver, string> ThereIsWindowOtherThan(ICollection<string> existWindows)
         //{
            
-        //    bool result = true;
-
-        //    while (result)
-        //    {
-        //        ICollection<string> nowOpenWindow = driver.WindowHandles;
-        //        foreach (var item in nowOpenWindow)
-        //        {
-        //            nowOpenWindow.Remove(existWindows.First());
-        //        }
-        //        if (nowOpenWindow.Count() > 0)
-        //        {
-        //            result = false;
-        //        }
-
-        //    }
+        //    
         
         //}
         
