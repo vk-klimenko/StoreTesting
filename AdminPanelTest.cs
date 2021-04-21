@@ -302,36 +302,86 @@ namespace StoreTesting
             Не забудьте, что новое окно открывается не мгновенно, поэтому требуется ожидание открытия окна.
             */
 
-            
-            //
-
             AdminPanelAuth("admin", "admin");
 
             driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//span[@class='name' and text()='Countries']")).Click();
             driver.Navigate().GoToUrl("http://litecart/admin/?app=countries&doc=edit_country&country_code=IS");
 
             string mainWindowId = driver.CurrentWindowHandle;
-            ICollection<string> existWIndows = driver.WindowHandles;
+            IList<string> existWindows = driver.WindowHandles;
 
 
             IList<IWebElement> listUrls = driver.FindElements(By.CssSelector("#content a:nth-child(n+2)[target='_blank']"));
             Assert.IsTrue(AreElementsPresent(By.CssSelector("#content a:nth-child(n+2)[target='_blank']")));
 
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript("window.open()");
+            foreach (IWebElement url in listUrls)
+            {
+                IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                js.ExecuteScript("window.open()");
 
-            // Ожидание появления окна
-            
-            wait.Until(ThereIsWindowOtherThan(existWIndows));
+                // Ожидание появления окна
+                //wait.Until(ThereIsWindowOtherThan(existWindows));
+
+                WaitNewWindow(existWindows);
+
+
+                driver.SwitchTo().Window("NEW ID");
+                Assert.IsTrue(driver.CurrentWindowHandle == "NEW ID");
+
+                driver.Close();
+
+                driver.SwitchTo().Window(mainWindowId);
+            }
+
+
+
+
+
+
+
+
         }
 
-        private Func<IWebDriver, string> ThereIsWindowOtherThan(ICollection<string> existWIndows)
+        private bool WaitNewWindow(ICollection<string> existWindows)
         {
-            ICollection<string> nowOpenWindow = driver.WindowHandles;
-            
-            return null;
+            bool result = true;
+            while (result)
+            {
+                IList<string> nowOpenWindow = driver.WindowHandles;
+                if(nowOpenWindow.Count() > existWindows.Count())
+                {
+                    
+                }
+
+            }
+            return result;
         }
+
+        //private Func<IWebDriver, string> ThereIsWindowOtherThan(ICollection<string> existWindows)
+        //{
+           
+        //    bool result = true;
+
+        //    while (result)
+        //    {
+        //        ICollection<string> nowOpenWindow = driver.WindowHandles;
+        //        foreach (var item in nowOpenWindow)
+        //        {
+        //            nowOpenWindow.Remove(existWindows.First());
+        //        }
+        //        if (nowOpenWindow.Count() > 0)
+        //        {
+        //            result = false;
+        //        }
+
+        //    }
+        
+        //}
+        
+
+
     }
 
+    
    
 }
