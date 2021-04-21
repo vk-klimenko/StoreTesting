@@ -275,15 +275,15 @@ namespace StoreTesting
 
             IList<IWebElement> products = driver.FindElements(By.CssSelector("#box-checkout-summary td.item"));
 
-            for (int i = 0; i < products.Count; i++)
+            foreach(IWebElement product in products)
             {
                 //1. найти старый элемент
                 wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#box-checkout-summary td.item")));
                 // 2.
                 driver.FindElement(By.CssSelector("button[name='remove_cart_item']")).Click();
                 // 3.
-                wait.Until(ExpectedConditions.StalenessOf(products[i]));
-                // 4. 
+                wait.Until(ExpectedConditions.StalenessOf(product));
+                // 4
                 products = driver.FindElements(By.CssSelector("#box-checkout-summary td.item"));
             }
             
