@@ -328,15 +328,24 @@ namespace StoreTesting
                 string id = "";
                 while (true)
                 {
+                    //ICollection<string> nowOpenWindow = driver.WindowHandles;
+                    //if (nowOpenWindow.Count() > existWindows.Count())
+                    //{
+                    //    //nowOpenWindow.ToList().RemoveAll(existWindows.ToList().Contains);
+                    //    foreach (var item in nowOpenWindow)
+                    //    {
+                    //        if (item != existWindows.First())
+                    //            id = item;
+                    //    }
+                    //    break;
+                    //}
+                    /* ----------------------------------------------------------------- */
                     ICollection<string> nowOpenWindow = driver.WindowHandles;
-                    if (nowOpenWindow.Count() > existWindows.Count())
+                    List<string> list = new List<string>(nowOpenWindow);
+                    if (list.Count > existWindows.Count())
                     {
-                        //nowOpenWindow.ToList().RemoveAll(existWindows.ToList().Contains);
-                        foreach (var item in nowOpenWindow)
-                        {
-                            if (item != existWindows.First())
-                                id = item;
-                        }
+                        list.RemoveAll(existWindows.Contains);
+                        id = list.First();
                         break;
                     }
                 }
@@ -352,19 +361,23 @@ namespace StoreTesting
         
         }
 
-       
+
 
         //private Func<IWebDriver, string> ThereIsWindowOtherThan(ICollection<string> existWindows)
         //{
-           
-        //    
-        
         //}
+
         
 
 
     }
 
-    
-   
+
+
+
+
 }
+
+
+
+
