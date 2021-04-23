@@ -36,13 +36,13 @@ namespace StoreTesting.FrontendTests
 
             for (int i = 0; i < 3; i++)
             {
-                driver.Navigate().GoToUrl(baseUrl);
+               GoToPageURL(baseUrl);
 
                 // Ожидание. Блок "Популярные товары"
                 wait.Until(driver => driver.FindElement(By.CssSelector("#box-most-popular")));
 
                 // Переход на карточку товара
-                driver.Navigate().GoToUrl(driver.FindElement(By.CssSelector("#box-most-popular ul li a.link")).GetAttribute("href").Trim());
+                GoToPageURL(By.CssSelector("#box-most-popular ul li a.link"));
 
                 // Ожидание. Появление текста на кнопке.
                 IWebElement textButton = driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']"));
@@ -55,10 +55,10 @@ namespace StoreTesting.FrontendTests
                 if (IsElementBoolen(By.Name("options[Size]")))
                 {
                     SelectElement select = new SelectElement(driver.FindElement(By.Name("options[Size]")));
-                    select.SelectByIndex(new Random().Next(1, 4));
+                    select.SelectByIndex(rnd.Next(1, 4));
                 }
                 // Добавляем товар в корзину.
-                driver.FindElement(By.CssSelector("#box-product [name='add_cart_product']")).Click();
+                PressClick(By.CssSelector("#box-product [name='add_cart_product']"));
 
                 // Ожидание изменения кол-ва товара в корзине.
                 item += 1;
@@ -67,7 +67,7 @@ namespace StoreTesting.FrontendTests
             }
 
             // Переход на главную страницу
-            driver.Navigate().GoToUrl(baseUrl);
+            GoToPageURL(baseUrl);
 
             // Ожидание. Элемент "корзина"
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#cart")));
@@ -80,22 +80,22 @@ namespace StoreTesting.FrontendTests
             if (IsElementBoolen(By.CssSelector("#box-checkout-cart ul.shortcuts li")))
                 driver.FindElement(By.CssSelector("#box-checkout-cart ul.shortcuts li")).Click();
 
-            IList<IWebElement> products = driver.FindElements(By.CssSelector("#box-checkout-summary td.item"));
+            IList<IWebElement> products = GetListElements(By.CssSelector("#box-checkout-summary td.item"));
 
             foreach (IWebElement product in products)
             {
                 //1. найти старый элемент
                 wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#box-checkout-summary td.item")));
                 // 2.
-                driver.FindElement(By.CssSelector("button[name='remove_cart_item']")).Click();
+                PressClick(By.CssSelector("button[name='remove_cart_item']"));
                 // 3.
                 wait.Until(ExpectedConditions.StalenessOf(product));
                 // 4
-                products = driver.FindElements(By.CssSelector("#box-checkout-summary td.item"));
+                products = GetListElements(By.CssSelector("#box-checkout-summary td.item"));
             }
 
             //IWebElement btnRemoveItem;
-            //while(driver.FindElements(By.CssSelector("button[name='remove_cart_item']")).Count() != 0)
+            //while(GetListElements(By.CssSelector("button[name='remove_cart_item']")).Count() != 0)
             //{
             //    btnRemoveItem = driver.FindElement(By.CssSelector("button[name='remove_cart_item']"));
             //    driver.FindElement(By.CssSelector("button[name='remove_cart_item']")).Click();

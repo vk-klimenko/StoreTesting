@@ -1,14 +1,12 @@
 ﻿using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StoreTesting
 {
     public class CreateUsers : BasesTest
     {
+        private Random rnd;
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
@@ -56,7 +54,6 @@ namespace StoreTesting
         /// <returns>Пятизначный индекс</returns>
         private string GetCodeNumber()
         {
-            Random rnd = new Random();
             string code = String.Empty;
 
             for (int i = 0; i < 5; i++)
@@ -72,7 +69,6 @@ namespace StoreTesting
         /// <returns>Email</returns>
         private string GetRandomEmail()
         {
-            Random rnd = new Random();
             var str = new StringBuilder();
             for (int i = 0; i < 8; i++)
             {
@@ -87,7 +83,7 @@ namespace StoreTesting
         /// <returns>Номер в формате "+1 (###) (####)-(##)-(##)"</returns>
         private string GetPhoneNumFormat()
         {
-            return  $"+1 {new Random().Next(100, 999)} {new Random().Next(1000, 9999)} {new Random().Next(10, 99)} {new Random().Next(10, 99)}";
+            return  $"+1 {rnd.Next(100, 999)} {rnd.Next(1000, 9999)} {rnd.Next(10, 99)} {rnd.Next(10, 99)}";
         }
     }
 }

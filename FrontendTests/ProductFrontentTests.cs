@@ -20,18 +20,18 @@ namespace StoreTesting.FrontendTests
         [Test]
         public void AvailabilityStickersOnGoodsTest()
         {
-            driver.Url = $"{baseUrl}rubber-ducks-c-1/";
+            GoToPageURL($"{baseUrl}rubber-ducks-c-1/");
             string locator = ".//div[@id='box-category']//ul[contains(@class,'products')]/li";
             string locatorSticker = ".//div[contains(@class,'sticker')]";
 
-            IList<IWebElement> products = driver.FindElements(By.XPath(locator));
+            IList<IWebElement> products = GetListElements(By.XPath(locator));
 
             if (AreElementsPresent(By.XPath(locator)))
             {
                 for (int i = 0; i < products.Count; i++)
                 {
                     Assert.IsTrue(AreElementsPresent(products, locatorSticker, i));
-                    products = driver.FindElements(By.XPath(locator));
+                    products = GetListElements(By.XPath(locator));
                 }
             }
         }
@@ -43,7 +43,7 @@ namespace StoreTesting.FrontendTests
         [Test]
         public void CheckCorrectProductPageTest()
         {
-            driver.Url = baseUrl;
+            GoToPageURL(baseUrl);
 
             Dictionary<string, string> dictMainProduct = new Dictionary<string, string>();
             Dictionary<string, string> dictPageCartProduct = new Dictionary<string, string>(); ;
@@ -51,55 +51,56 @@ namespace StoreTesting.FrontendTests
             // Получаем данные товара с главной страницы 
 
             // Имя товара
-            dictMainProduct.Add("name", driver.FindElement(By.CssSelector("#box-campaigns a.link div.name")).GetAttribute("textContent").Trim());
+            dictMainProduct.Add("name", GetAttributeElement(By.CssSelector("#box-campaigns a.link div.name"), "textContent"));
 
             // Обычна цена
-            dictMainProduct.Add("priceRegular", driver.FindElement(By.CssSelector("#box-campaigns a.link div.price-wrapper s")).GetAttribute("textContent").Trim());
+            dictMainProduct.Add("priceRegular", GetAttributeElement(By.CssSelector("#box-campaigns a.link div.price-wrapper s"), "textContent"));
 
             // Аукционная цена 
-            dictMainProduct.Add("priceCampaign", driver.FindElement(By.CssSelector("#box-campaigns a.link div.price-wrapper strong")).GetAttribute("textContent").Trim());
+            dictMainProduct.Add("priceCampaign", GetAttributeElement(By.CssSelector("#box-campaigns a.link div.price-wrapper strong"), "textContent"));
 
             // Цвет обычной цены rgba(119, 119, 119, 1) 
-            dictMainProduct.Add("priceColorRegular", driver.FindElement(By.CssSelector("#box-campaigns a.link div.price-wrapper s")).GetCssValue("color").Replace("rgba(", "").TrimEnd(')'));
+            // 
+            dictMainProduct.Add("priceColorRegular", (GetCssValueElement(By.CssSelector("#box-campaigns a.link div.price-wrapper s"), "color")).Replace("rgba(", "").TrimEnd(')')); 
 
             // Перечеркнута обычная цена text-decoration-line: line-through 
-            dictMainProduct.Add("priceLineThrough", driver.FindElement(By.CssSelector("#box-campaigns a.link div.price-wrapper s")).GetCssValue("text-decoration-line").Trim());
+            dictMainProduct.Add("priceLineThrough", GetCssValueElement(By.CssSelector("#box-campaigns a.link div.price-wrapper s"),"text-decoration-line"));
 
             // Аукционная цена font-bold 
-            dictMainProduct.Add("priceBold", driver.FindElement(By.CssSelector("#box-campaigns a.link div.price-wrapper strong")).GetCssValue("font-weight").Trim());
+            dictMainProduct.Add("priceBold", GetCssValueElement(By.CssSelector("#box-campaigns a.link div.price-wrapper strong"), "font-weight"));
 
             // Аукционная цена цвет rgba(204, 0, 0, 1) 
-            dictMainProduct.Add("priceColorCampaign", driver.FindElement(By.CssSelector("#box-campaigns a.link div.price-wrapper strong")).GetCssValue("color").Replace("rgba(", "").TrimEnd(')'));
+            dictMainProduct.Add("priceColorCampaign", (GetCssValueElement(By.CssSelector("#box-campaigns a.link div.price-wrapper strong"), "color")).Replace("rgba(", "").TrimEnd(')'));
 
             // Аукционная цена - размер шрифта
-            dictMainProduct.Add("priceFontSizeCampaign", driver.FindElement(By.CssSelector("#box-campaigns div.price-wrapper strong.campaign-price")).GetCssValue("font-size").Replace("px", "").Replace(".", ",").Trim());
+            dictMainProduct.Add("priceFontSizeCampaign", (GetCssValueElement(By.CssSelector("#box-campaigns div.price-wrapper strong.campaign-price"), "font-size")).Replace("px", "").Replace(".", ",").Trim());
 
             // Обычная цена - размер шрифта
-            dictMainProduct.Add("priceFontSizeRegular", driver.FindElement(By.CssSelector("#box-campaigns div.price-wrapper s.regular-price")).GetCssValue("font-size").Replace("px", "").Replace(".", ",").Trim());
+            dictMainProduct.Add("priceFontSizeRegular", GetCssValueElement(By.CssSelector("#box-campaigns div.price-wrapper s.regular-price"), "font-size").Replace("px", "").Replace(".", ",").Trim());
 
 
             ///////////// ************************************************************************************  ////////////////////// 
 
             // переход на карточку товара 
-            driver.Navigate().GoToUrl(driver.FindElement(By.CssSelector("#box-campaigns a.link")).GetAttribute("href"));
+            GoToPageURL(By.CssSelector("#box-campaigns a.link"));
 
             // Имя товара 
-            dictPageCartProduct.Add("name", driver.FindElement(By.CssSelector("#box-product h1.title")).GetAttribute("textContent").Trim());
+            dictPageCartProduct.Add("name", GetAttributeElement(By.CssSelector("#box-product h1.title"), "textContent"));
 
             // Обычна цена
-            dictPageCartProduct.Add("priceRegular", driver.FindElement(By.CssSelector("#box-product s.regular-price")).GetAttribute("textContent").Trim());
+            dictPageCartProduct.Add("priceRegular", GetAttributeElement(By.CssSelector("#box-product s.regular-price"), "textContent"));
 
             // Аукционная цена
-            dictPageCartProduct.Add("priceCampaign", driver.FindElement(By.CssSelector("#box-product strong.campaign-price")).GetAttribute("textContent").Trim());
+            dictPageCartProduct.Add("priceCampaign", GetAttributeElement(By.CssSelector("#box-product strong.campaign-price"), "textContent"));
 
             // Цвет обычной цены
-            dictPageCartProduct.Add("priceColorRegular", driver.FindElement(By.CssSelector("#box-product s.regular-price")).GetCssValue("color").Replace("rgba(", "").TrimEnd(')'));
+            dictPageCartProduct.Add("priceColorRegular", (GetCssValueElement(By.CssSelector("#box-product s.regular-price"), "color")).Replace("rgba(", "").TrimEnd(')'));
 
             // Аукционная цена - размер шрифта
-            dictPageCartProduct.Add("priceFontSizeCampaign", driver.FindElement(By.CssSelector("#box-product div.price-wrapper strong.campaign-price")).GetCssValue("font-size").Replace("px", "").Replace(".", ",").Trim());
+            dictPageCartProduct.Add("priceFontSizeCampaign", (GetCssValueElement(By.CssSelector("#box-product div.price-wrapper strong.campaign-price"), "font-size")).Replace("px", "").Replace(".", ",").Trim());
 
             // Обычная цена - размер шрифта
-            dictPageCartProduct.Add("priceFontSizeRegular", driver.FindElement(By.CssSelector("#box-product div.price-wrapper s.regular-price")).GetCssValue("font-size").Replace("px", "").Replace(".", ",").Trim());
+            dictPageCartProduct.Add("priceFontSizeRegular", (GetCssValueElement(By.CssSelector("#box-product div.price-wrapper s.regular-price"), "font-size")).Replace("px", "").Replace(".", ",").Trim());
 
             ////////////////// ПРОВЕРКИ /////////////////////////////
 

@@ -11,6 +11,7 @@ namespace StoreTesting
         protected IWebDriver driver;
         protected WebDriverWait wait;
         protected string baseUrl = "http://litecart/";
+        protected Random rnd;
 
 
         [SetUp]

@@ -20,9 +20,9 @@ namespace StoreTesting.BackendTests
         {
             AdminPanelAuth("admin", "admin");
 
-            driver.Navigate().GoToUrl($"{baseUrl}admin/?app=countries&doc=countries");
+            GoToPageURL($"{baseUrl}admin/?app=countries&doc=countries");
 
-            IList<IWebElement> rows = driver.FindElements(By.CssSelector("tr.row"));
+            IList<IWebElement> rows = GetListElements(By.CssSelector("tr.row"));
 
             Assert.IsTrue(AreElementsPresent(By.CssSelector("tr.row")));
             Assert.IsTrue(CheckingCountry(rows));
@@ -37,15 +37,15 @@ namespace StoreTesting.BackendTests
         {
             AdminPanelAuth("admin", "admin");
 
-            driver.Navigate().GoToUrl($"{baseUrl}admin/?app=geo_zones&doc=geo_zones");
+            GoToPageURL($"{baseUrl}admin/?app=geo_zones&doc=geo_zones");
 
-            IList<IWebElement> geoZone = driver.FindElements(By.CssSelector("[name = 'geo_zones_form'] tr.row"));
+            IList<IWebElement> geoZone = GetListElements(By.CssSelector("[name = 'geo_zones_form'] tr.row"));
 
             for (int i = 0; i < geoZone.Count; i++)
             {
                 driver.Url = geoZone[i].FindElement(By.CssSelector("tr.row td:nth-child(3n) a")).GetAttribute("href").Trim();
 
-                IList<IWebElement> rowsGeoZone = driver.FindElements(By.XPath(".//table[@id='table-zones']//tr[position() > 1 and position() < last()]//select[contains(@name,'zone_code')]/option"));
+                IList<IWebElement> rowsGeoZone = GetListElements(By.XPath(".//table[@id='table-zones']//tr[position() > 1 and position() < last()]//select[contains(@name,'zone_code')]/option"));
                 Assert.IsTrue(AreElementsPresent(By.XPath(".//table[@id='table-zones']//tr[position() > 1 and position() < last()]//select[contains(@name,'zone_code')]/option")));
 
                 List<string> geoList = new List<string>();
@@ -63,7 +63,7 @@ namespace StoreTesting.BackendTests
                 geoList.Clear();
                 geoListSort.Clear();
 
-                geoZone = driver.FindElements(By.CssSelector("[name = 'geo_zones_form'] tr.row"));
+                geoZone = GetListElements(By.CssSelector("[name = 'geo_zones_form'] tr.row"));
             }
 
         }

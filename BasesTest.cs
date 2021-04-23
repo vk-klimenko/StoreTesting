@@ -176,7 +176,7 @@ namespace StoreTesting
             return countryList.SequenceEqual(countryListSort); 
         }
         /// <summary>
-        /// Нажать на кнопку
+        /// Нажать на кнопку или ссылку
         /// </summary>
         /// <param name="locator">Локатор</param>
         protected void PressClick(By locator)
@@ -275,9 +275,52 @@ namespace StoreTesting
         protected void GoToPageURL(By locator)
         {
             IsElementPresent(locator);
-            string url = driver.FindElement(locator).GetAttribute("href");
+            string url = driver.FindElement(locator).GetAttribute("href").Trim();
             driver.Navigate().GoToUrl(url);
         }
+        /// <summary>
+        /// Получить список элементов DOM
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <returns>Возвращает список IWebElement элементов</returns>
+        protected IList<IWebElement> GetListElements(By locator)
+        {
+            AreElementsPresent(locator);
+            return driver.FindElements(locator);
+            
+        }
+        /// <summary>
+        /// Получить элемент DOM
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <returns>Возвращает элемент IWebElement</returns>
+        protected IWebElement GetElement(By locator)
+        {
+            IsElementPresent(locator);
+            return driver.FindElement(locator);
+        }
+        /// <summary>
+        /// Получить значение атрибута элемента IWebElement
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <param name="attribute">Атрибут элемента IWebElement</param>
+        /// <returns></returns>
+        protected string GetAttributeElement(By locator, string attribute)
+        {
+            IsElementPresent(locator);
+            return driver.FindElement(locator).GetAttribute(attribute.Trim()).Trim();
+        }
+        /// <summary>
+        /// Получить значение свойства CSS элемента
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        /// <param name="value">Свойство элемента IWebElement</param>
+        /// <returns></returns>
+        protected string GetCssValueElement(By locator, string value)
+        {
+            IsElementPresent(locator);
 
+            return driver.FindElement(locator).GetCssValue(value.Trim()).Trim();
+        }
     }
 }

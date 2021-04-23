@@ -44,7 +44,7 @@ namespace StoreTesting.BackendTests
             string mainWindowId = driver.CurrentWindowHandle;
             IList<string> existWindows = driver.WindowHandles;
 
-            IList<IWebElement> listUrls = driver.FindElements(By.CssSelector("#content a:nth-child(n+2)[target='_blank']"));
+            IList<IWebElement> listUrls = GetListElements(By.CssSelector("#content a:nth-child(n+2)[target='_blank']"));
             Assert.IsTrue(AreElementsPresent(By.CssSelector("#content a:nth-child(n+2)[target='_blank']")));
 
             foreach (IWebElement el in listUrls)
@@ -65,7 +65,7 @@ namespace StoreTesting.BackendTests
 
                 driver.SwitchTo().Window(newWindow);
                 Assert.IsTrue(driver.CurrentWindowHandle == newWindow);
-                driver.Navigate().GoToUrl(url);
+                GoToPageURL(url);
 
                 driver.Close();
 

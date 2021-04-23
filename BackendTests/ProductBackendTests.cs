@@ -37,7 +37,7 @@ namespace StoreTesting.BackendTests
             #endregion
 
             AdminPanelAuth("admin", "admin");
-            IList<IWebElement> rows = driver.FindElement(By.CssSelector("ul#box-apps-menu")).FindElements(By.CssSelector("li#app-"));
+            IList<IWebElement> rows = GetElement(By.CssSelector("ul#box-apps-menu")).FindElements(By.CssSelector("li#app-"));
 
             for (int i = 0; i < rows.Count; i++)
             {
@@ -48,18 +48,18 @@ namespace StoreTesting.BackendTests
                 // проверка подразделов 
                 if (AreElementsPresent(By.CssSelector("ul.docs")))
                 {
-                    IList<IWebElement> nestedItems = driver.FindElement(By.CssSelector("ul.docs")).FindElements(By.TagName("li"));
+                    IList<IWebElement> nestedItems = GetElement(By.CssSelector("ul.docs")).FindElements(By.TagName("li"));
                     for (int x = 0; x < nestedItems.Count; x++)
                     {
                         nestedItems[x].Click();
                         // проверка элемента h1
                         Assert.IsTrue(IsElementPresent(By.CssSelector("td#content h1")));
-                        nestedItems = driver.FindElement(By.CssSelector("ul.docs")).FindElements(By.TagName("li"));
+                        nestedItems = GetElement(By.CssSelector("ul.docs")).FindElements(By.TagName("li"));
 
                     }
                 }
                 // обновляем элементы
-                rows = driver.FindElements(By.CssSelector("li#app-"));
+                rows = GetListElements(By.CssSelector("li#app-"));
             }
         }
 
@@ -92,10 +92,10 @@ namespace StoreTesting.BackendTests
             // 2. Открываем меню Catalog и нажимаем "Add New Product"
 
             // click catalog
-            driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//*[.='Catalog']")).Click();
+            PressClick(By.XPath(".//ul[@id='box-apps-menu']//*[.='Catalog']"));
             Thread.Sleep(1000);
             // click add new product
-            driver.FindElement(By.XPath(".//td[@id='content']//*[.=' Add New Product']")).Click();
+            PressClick(By.XPath(".//td[@id='content']//*[.=' Add New Product']"));
 
             CreateProduct product = new CreateProduct("Milk");
             // 3.1. Вкладка General Information и Prices и сохраняем. Скидки(Campains) на вкладке Prices можно не добавлять
@@ -103,32 +103,32 @@ namespace StoreTesting.BackendTests
             // General
 
             // Status
-            driver.FindElement(By.XPath(".//div[@id='tab-general']//label[.=' Enabled']")).Click();
+            PressClick(By.XPath(".//div[@id='tab-general']//label[.=' Enabled']"));
 
             // Name
-            driver.FindElement(By.XPath(".//div[@id='tab-general']//input[@name='name[en]']")).SendKeys(Keys.Home + product.Name);
+            GetElement(By.XPath(".//div[@id='tab-general']//input[@name='name[en]']")).SendKeys(Keys.Home + product.Name);
 
             // Code
-            driver.FindElement(By.XPath(".//div[@id='tab-general']//input[@name='code']")).SendKeys(Keys.Home + product.Code);
-            Thread.Sleep(3000);
+            GetElement(By.XPath(".//div[@id='tab-general']//input[@name='code']")).SendKeys(Keys.Home + product.Code);
+            Thread.Sleep(1000);
 
             // Categories
-            driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='categories[]' and @value='2']")).Click();
+            PressClick(By.XPath($".//div[@id='tab-general']//input[@name='categories[]' and @value='2']"));
 
             // Product Groups
-            driver.FindElement(By.XPath($".//div[@id='tab-general']//input[@name='product_groups[]' and @value='1-{Convert.ToString(new Random().Next(1, 4))}']")).Click();
+            PressClick(By.XPath($".//div[@id='tab-general']//input[@name='product_groups[]' and @value='1-{Convert.ToString(rnd.Next(1, 4))}']"));
 
             // Quantity
             SetValueFromJS(By.Name("quantity"), product.Quantity, "value");
-            Thread.Sleep(3000);
-            // Quantity Unit <select name="quantity_unit_id" data-size="auto"> SelectElementByValue=1
+            Thread.Sleep(1000);
+            // Quantity Unit 
             DropDownList(By.XPath(".//select[@name='quantity_unit_id']"), "1");
 
             // Delivery Status 
             DropDownList(By.XPath(".//select[@name='delivery_status_id']"), "1");
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
             // Sold Out Status   
-            DropDownList(By.XPath(".//select[@name='sold_out_status_id']"), Convert.ToString(new Random().Next(1, 3)));
+            DropDownList(By.XPath(".//select[@name='sold_out_status_id']"), Convert.ToString(rnd.Next(1, 3)));
 
             // Upload Images
             UpLoadFile(By.XPath(".//input[@name='new_images[]']"), @"\icon.png");
@@ -141,7 +141,7 @@ namespace StoreTesting.BackendTests
 
             // Переход на вкладку Information
             PressClick(By.XPath(".//ul[@class='index']/li/a[.='Information']"));
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             // 3.2. Вкладка Information
 
@@ -154,7 +154,7 @@ namespace StoreTesting.BackendTests
             // Short Description
             InputText(By.XPath(".//div[@id='tab-information']//input[@name='short_description[en]']"), "This is a very necessary thing");
 
-            // Description      ".//div[@id='tab-information']//textarea[@name='description[en]']"
+            // Description     
             InputText(By.XPath(".//div[@class='trumbowyg-editor']"), @"Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.");
 
             // Head Title
@@ -165,7 +165,7 @@ namespace StoreTesting.BackendTests
 
             // Переход на вкладку Prices
             PressClick(By.XPath(".//ul[@class='index']/li/a[.='Prices']"));
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             // 3.3. Вкладка Prices
 
@@ -176,30 +176,29 @@ namespace StoreTesting.BackendTests
             DropDownList(By.XPath(".//select[@name='purchase_price_currency_code']"), "EUR");
 
             // Price	Price Incl. Tax (?)
-            SetValueFromJS(By.Name("prices[USD]"), Convert.ToString(new Random().Next(1, 500)), "value");
-            SetValueFromJS(By.Name("prices[EUR]"), Convert.ToString(new Random().Next(1, 500)), "value");
-
+            SetValueFromJS(By.Name("prices[USD]"), Convert.ToString(rnd.Next(1, 500)), "value");
+            SetValueFromJS(By.Name("prices[EUR]"), Convert.ToString(rnd.Next(1, 500)), "value");
 
             // Campaigns
-            driver.FindElement(By.Id("add-campaign")).Click();
+            PressClick(By.Id("add-campaign"));
 
             SetValueFromJS(By.Name("campaigns[new_1][start_date]"), $"{product.DateFrom}T12:00", "value");
             SetValueFromJS(By.Name("campaigns[new_1][end_date]"), $"{product.DateTo}T23:00", "value");
-            SetValueFromJS(By.Name("campaigns[new_1][percentage]"), Convert.ToString(new Random().Next(10, 50)), "value");
-            SetValueFromJS(By.Name("campaigns[new_1][USD]"), Convert.ToString(new Random().Next(10, 500)), "value");
-            SetValueFromJS(By.Name("campaigns[new_1][EUR]"), Convert.ToString(new Random().Next(10, 400)), "value");
+            SetValueFromJS(By.Name("campaigns[new_1][percentage]"), Convert.ToString(rnd.Next(10, 50)), "value");
+            SetValueFromJS(By.Name("campaigns[new_1][USD]"), Convert.ToString(rnd.Next(10, 500)), "value");
+            SetValueFromJS(By.Name("campaigns[new_1][EUR]"), Convert.ToString(rnd.Next(10, 400)), "value");
 
             // Button Save
             PressClick(By.XPath(".//span[@class='button-set']/button[@name='save']"));
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             // 4. Проверка, что товар добавлен
             // click catalog
-            driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//*[.='Catalog']")).Click();
-            Thread.Sleep(3000);
+            PressClick(By.XPath(".//ul[@id='box-apps-menu']//*[.='Catalog']"));
+            Thread.Sleep(1000);
 
             AreElementsPresent(By.XPath(".//td[@id='content']//table[@class='dataTable']//tr[@class='row' and position()>2]//a"));
-            IList<IWebElement> productList = driver.FindElements(By.XPath(".//td[@id='content']//table[@class='dataTable']//tr[@class='row' and position()>2]//a"));
+            IList<IWebElement> productList = GetListElements(By.XPath(".//td[@id='content']//table[@class='dataTable']//tr[@class='row' and position()>2]//a"));
 
             Assert.IsTrue(IsProductInCatalog(productList, product.Name));
         }

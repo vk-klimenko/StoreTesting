@@ -29,7 +29,7 @@ namespace StoreTesting.FrontendTests
             //Можно оформить сценарий либо как тест, либо как отдельный исполняемый файл.
             //Проверки можно никакие не делать, только действия - заполнение полей, нажатия на кнопки и ссылки.Если сценарий дошёл до конца, то есть созданный пользователь смог выполнить вход и выход-- значит создание прошло успешно.
             #endregion
-            driver.Navigate().GoToUrl($"{baseUrl}en/create_account");
+            GoToPageURL($"{baseUrl}en/create_account");
             CreateUsers user = new CreateUsers("Masha", "Sasha", "Mankheton 77", "password2", "Las-Vegas");
 
             // 1. Запонение формы
@@ -50,12 +50,12 @@ namespace StoreTesting.FrontendTests
 
             // ---------------------------------------------------------------------------------------------------
             // Клик по элементу выпадающего списка
-            driver.FindElement(By.CssSelector("span [role='presentation']")).Click();
+            PressClick(By.CssSelector("span [role='presentation']"));
             // В откр. списке ищем поле ввода
             driver.FindElement(By.CssSelector("input.select2-search__field")).SendKeys("United States" + Keys.Enter);
             // ---------------------------------------------------------------------------------------------------
 
-            DropDownList(By.CssSelector("select[name='zone_code']"), new Random().Next(1, 65));
+            DropDownList(By.CssSelector("select[name='zone_code']"), rnd.Next(1, 65));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[6]/td[1]/input[@name='email']"), user.Email);
             Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[6]/td[1]/input[@name='email']")).GetAttribute("value"));
