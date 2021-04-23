@@ -8,45 +8,35 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support;
 using OpenQA.Selenium.Support.UI;
 
-namespace StoreTesting
+namespace StoreTesting.BackendTests
 {
-    [TestFixture]
-    public class AdminPanelTest : BasesTest
+    public class ProductBackendTests : BasesTest
     {
         /// <summary>
-        /// Авторизация в админ панель
-        /// </summary>
-        [Test]
-        public void LoginAdminPanelTest()
-        {
-            AdminPanelAuth("admin", "admin");
-        }
-
-        /// <summary>
-        /// Авторизация в админ панель и чекбокс запомнить пользователя
-        /// </summary>
-        [Test]
-        public void LoginRememberAdminPanelTest()
-        {
-            AdminPanelAuth("admin", "admin", true);
-        }
-
-        /// <summary>
-        /// Выход из админ панели
-        /// </summary>
-        [Test]
-        public void LogOutAdminPanelTest()
-        {
-            AdminPanelLogout("admin", "admin");
-        }
-
-        /// <summary>
-        /// Клик по левому сайдбару и проверка H1
+        /// Задание 10. Проверить, что открывается правильная страница товара
         /// </summary>
         [Test]
         public void LoginAdminPanelMenuSelectTest()
         {
-            AdminPanelAuth("admin", "admin"); 
+            #region Задание
+            /*
+             *  Задание 10. Проверить, что открывается правильная страница товара
+                Сделайте сценарий, который проверяет, что при клике на товар открывается правильная страница товара в учебном приложении litecart.
+
+                Более точно, нужно открыть главную страницу, выбрать первый товар в блоке Campaigns и проверить следующее:
+
+                а) на главной странице и на странице товара совпадает текст названия товара
+                б) на главной странице и на странице товара совпадают цены (обычная и акционная)
+                в) обычная цена зачёркнутая и серая (можно считать, что "серый" цвет это такой, у которого в RGBa представлении одинаковые значения для каналов R, G и B)
+                г) акционная жирная и красная (можно считать, что "красный" цвет это такой, у которого в RGBa представлении каналы G и B имеют нулевые значения)
+                (цвета надо проверить на каждой странице независимо, при этом цвета на разных страницах могут не совпадать)
+                д) акционная цена крупнее, чем обычная (это тоже надо проверить на каждой странице независимо)
+
+                Необходимо убедиться, что тесты работают в разных браузерах, желательно проверить во всех трёх ключевых браузерах (Chrome, Firefox, IE).
+             */
+            #endregion
+
+            AdminPanelAuth("admin", "admin");
             IList<IWebElement> rows = driver.FindElement(By.CssSelector("ul#box-apps-menu")).FindElements(By.CssSelector("li#app-"));
 
             for (int i = 0; i < rows.Count; i++)
@@ -65,81 +55,14 @@ namespace StoreTesting
                         // проверка элемента h1
                         Assert.IsTrue(IsElementPresent(By.CssSelector("td#content h1")));
                         nestedItems = driver.FindElement(By.CssSelector("ul.docs")).FindElements(By.TagName("li"));
-                        
+
                     }
                 }
                 // обновляем элементы
                 rows = driver.FindElements(By.CssSelector("li#app-"));
-                
             }
         }
 
-
-        /// <summary>
-        /// Проверка сортировки стран
-        /// </summary>
-        [Test]
-        public void CheckingSortCountriesTest()
-        {
-            AdminPanelAuth("admin", "admin");
-
-            driver.Navigate().GoToUrl($"{baseUrl}admin/?app=countries&doc=countries");
-
-            // "tr.row td:nth-child(5n) a"
-
-            string locator = "tr.row";
-
-            IList<IWebElement> rows = driver.FindElements(By.CssSelector(locator));
-            
-            // 
-            Assert.IsTrue(AreElementsPresent(By.CssSelector(locator)));
-
-            // Проверка
-            Assert.IsTrue(CheckingCountry(rows));
-
-        }
-
-        /// <summary>
-        /// Проверка сортировки геозон
-        /// </summary>
-        [Test]
-        public void CheckingSortGeoTest()
-        {
-            AdminPanelAuth("admin", "admin");
-
-            driver.Navigate().GoToUrl($"{baseUrl}admin/?app=geo_zones&doc=geo_zones");
-
-            IList<IWebElement> geoZone = driver.FindElements(By.CssSelector("[name = 'geo_zones_form'] tr.row"));
-
-            for (int i = 0; i < geoZone.Count; i++)
-            {
-
-                driver.Url = geoZone[i].FindElement(By.CssSelector("tr.row td:nth-child(3n) a")).GetAttribute("href").Trim();
-
-                IList<IWebElement> rowsGeoZone = driver.FindElements(By.XPath(".//table[@id='table-zones']//tr[position() > 1 and position() < last()]//select[contains(@name,'zone_code')]/option"));
-                Assert.IsTrue(AreElementsPresent(By.XPath(".//table[@id='table-zones']//tr[position() > 1 and position() < last()]//select[contains(@name,'zone_code')]/option")));
-
-                List<string> geoList = new List<string>();
-                foreach(IWebElement row in rowsGeoZone)
-                {
-                    if (row.GetAttribute("selected") == "true")
-                        geoList.Add(row.GetAttribute("innerText").Trim());
-                }
-
-                List<string> geoListSort = geoList;
-                geoListSort.Sort();
-                Assert.IsTrue(geoList.SequenceEqual(geoListSort));
-
-
-                driver.Navigate().Back();
-                
-                geoList.Clear();
-                geoListSort.Clear();
-
-                geoZone = driver.FindElements(By.CssSelector("[name = 'geo_zones_form'] tr.row"));
-            }
-
-        }
 
         /// <summary>
         /// Cценарий добавления товара
@@ -147,7 +70,7 @@ namespace StoreTesting
         [Test]
         public void AddProductTest()
         {
-
+            #region Задание
             /*
              Сделайте сценарий для добавления нового товара(продукта) в учебном приложении litecart(в админке).
              Для добавления товара нужно открыть меню Catalog, в правом верхнем углу нажать кнопку "Add New Product", 
@@ -161,16 +84,16 @@ namespace StoreTesting
              Надо средствами языка программирования преобразовать относительный путь в абсолютный.
              После сохранения товара нужно убедиться, что он появился в каталоге(в админке).Клиентскую часть магазина можно не проверять.
             */
-
+            #endregion
             // 1. Заходим в админку
 
             AdminPanelAuth("admin", "admin");
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
             // 2. Открываем меню Catalog и нажимаем "Add New Product"
 
             // click catalog
             driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//*[.='Catalog']")).Click();
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
             // click add new product
             driver.FindElement(By.XPath(".//td[@id='content']//*[.=' Add New Product']")).Click();
 
@@ -200,13 +123,13 @@ namespace StoreTesting
             Thread.Sleep(3000);
             // Quantity Unit <select name="quantity_unit_id" data-size="auto"> SelectElementByValue=1
             DropDownList(By.XPath(".//select[@name='quantity_unit_id']"), "1");
-            
+
             // Delivery Status 
             DropDownList(By.XPath(".//select[@name='delivery_status_id']"), "1");
             Thread.Sleep(3000);
             // Sold Out Status   
-            DropDownList(By.XPath(".//select[@name='sold_out_status_id']"), Convert.ToString(new Random().Next(1,3)));
-            
+            DropDownList(By.XPath(".//select[@name='sold_out_status_id']"), Convert.ToString(new Random().Next(1, 3)));
+
             // Upload Images
             UpLoadFile(By.XPath(".//input[@name='new_images[]']"), @"\icon.png");
 
@@ -217,7 +140,7 @@ namespace StoreTesting
             SetValueFromJS(By.Name("date_valid_to"), product.DateTo, "value");
 
             // Переход на вкладку Information
-            PressButton(By.XPath(".//ul[@class='index']/li/a[.='Information']"));
+            PressClick(By.XPath(".//ul[@class='index']/li/a[.='Information']"));
             Thread.Sleep(3000);
 
             // 3.2. Вкладка Information
@@ -241,14 +164,14 @@ namespace StoreTesting
             InputText(By.XPath(".//div[@id='tab-information']//input[@name='meta_description[en]']"), "This is meta description");
 
             // Переход на вкладку Prices
-            PressButton(By.XPath(".//ul[@class='index']/li/a[.='Prices']"));
+            PressClick(By.XPath(".//ul[@class='index']/li/a[.='Prices']"));
             Thread.Sleep(3000);
 
             // 3.3. Вкладка Prices
 
             // Purchase Price
             SetValueFromJS(By.Name("purchase_price"), product.Price, "value");
-            
+
             // Select currency
             DropDownList(By.XPath(".//select[@name='purchase_price_currency_code']"), "EUR");
 
@@ -267,7 +190,7 @@ namespace StoreTesting
             SetValueFromJS(By.Name("campaigns[new_1][EUR]"), Convert.ToString(new Random().Next(10, 400)), "value");
 
             // Button Save
-            PressButton(By.XPath(".//span[@class='button-set']/button[@name='save']"));
+            PressClick(By.XPath(".//span[@class='button-set']/button[@name='save']"));
             Thread.Sleep(3000);
 
             // 4. Проверка, что товар добавлен
@@ -281,103 +204,6 @@ namespace StoreTesting
             Assert.IsTrue(IsProductInCatalog(productList, product.Name));
         }
 
-        /// <summary>
-        /// Проверка, что ссылки открываются в новом окне
-        /// </summary>
-        [Test]
-        public void CheckOpenNewWindowTest()
-        {
-            /*
-            Сделайте сценарий, который проверяет, что ссылки на странице редактирования страны открываются в новом окне.
-            Сценарий должен состоять из следующих частей:
-
-            1. зайти в админку
-            2. открыть пункт меню Countries(или страницу http://localhost/litecart/admin/?app=countries&doc=countries)
-            3. открыть на редактирование какую-нибудь страну или начать создание новой
-            4. возле некоторых полей есть ссылки с иконкой в виде квадратика со стрелкой --они ведут на внешние страницы и открываются в новом окне, именно это и нужно проверить.
-
-            Конечно, можно просто убедиться в том, что у ссылки есть атрибут target = "_blank".Но в этом упражнении требуется именно кликнуть по ссылке, 
-            чтобы она открылась в новом окне, потом переключиться в новое окно, закрыть его, вернуться обратно, и повторить эти действия для всех таких ссылок.
-            
-            Не забудьте, что новое окно открывается не мгновенно, поэтому требуется ожидание открытия окна.
-            */
-
-            /*-------------------------------------------------------------------------------*/
-
-            AdminPanelAuth("admin", "admin");
-
-            driver.FindElement(By.XPath(".//ul[@id='box-apps-menu']//span[@class='name' and text()='Countries']")).Click();
-            driver.Navigate().GoToUrl("http://litecart/admin/?app=countries&doc=edit_country&country_code=IS");
-
-            string mainWindowId = driver.CurrentWindowHandle;
-            IList<string> existWindows = driver.WindowHandles;
-
-
-            IList<IWebElement> listUrls = driver.FindElements(By.CssSelector("#content a:nth-child(n+2)[target='_blank']"));
-            Assert.IsTrue(AreElementsPresent(By.CssSelector("#content a:nth-child(n+2)[target='_blank']")));
-
-            foreach (IWebElement el in listUrls)
-            {
-                string url = el.GetAttribute("href").Trim();
-                IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-                js.ExecuteScript("window.open()");
-
-                // Ожидание появления окна
-                //wait.Until(ThereIsWindowOtherThan(existWindows));
-
-                string id = "";
-                while (true)
-                {
-                    //ICollection<string> nowOpenWindow = driver.WindowHandles;
-                    //if (nowOpenWindow.Count() > existWindows.Count())
-                    //{
-                    //    //nowOpenWindow.ToList().RemoveAll(existWindows.ToList().Contains);
-                    //    foreach (var item in nowOpenWindow)
-                    //    {
-                    //        if (item != existWindows.First())
-                    //            id = item;
-                    //    }
-                    //    break;
-                    //}
-                    /* ----------------------------------------------------------------- */
-                    ICollection<string> nowOpenWindow = driver.WindowHandles;
-                    List<string> list = new List<string>(nowOpenWindow);
-                    if (list.Count > existWindows.Count())
-                    {
-                        list.RemoveAll(existWindows.Contains);
-                        id = list.First();
-                        break;
-                    }
-                }
-                /* ------------------------------------------------------------------------------- */
-                driver.SwitchTo().Window(id);
-                Assert.IsTrue(driver.CurrentWindowHandle == id);
-                driver.Navigate().GoToUrl(url);
-
-                driver.Close();
-
-                driver.SwitchTo().Window(mainWindowId);
-            }
-        
-        }
-
-
-
-        //private Func<IWebDriver, string> ThereIsWindowOtherThan(ICollection<string> existWindows)
-        //{
-        //}
-
-        
-
 
     }
-
-
-
-
-
 }
-
-
-
-

@@ -11,29 +11,8 @@ using OpenQA.Selenium.Firefox;
 
 namespace StoreTesting
 {
-    public class BasesTest
+    public class BasesTest : InitialSet
     {
-        protected IWebDriver driver;
-        protected WebDriverWait wait;
-        protected string baseUrl = "http://litecart/";
-        
-
-        [SetUp]
-        public void Start()
-        {
-            driver = new ChromeDriver();
-            //driver = new FirefoxDriver();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            
-        }
-
-        [TearDown]
-        public void Stop()
-        {
-            driver.Quit();
-            driver = null;
-        }
-
         /// <summary>
         /// Поиск элементов
         /// </summary>
@@ -200,7 +179,7 @@ namespace StoreTesting
         /// Нажать на кнопку
         /// </summary>
         /// <param name="locator">Локатор</param>
-        protected void PressButton(By locator)
+        protected void PressClick(By locator)
         {
             IsElementPresent(locator);
             driver.FindElement(locator).Click();
@@ -281,8 +260,24 @@ namespace StoreTesting
             return result;
         }
 
-
-        
+        /// <summary>
+        /// Переход по URL 
+        /// </summary>
+        /// <param name="url">URL страницы</param>
+        protected void GoToPageURL(string url)
+        {
+            driver.Navigate().GoToUrl(url);
+        }
+        /// <summary>
+        /// Переход по URL используя локатор
+        /// </summary>
+        /// <param name="locator">Локатор</param>
+        protected void GoToPageURL(By locator)
+        {
+            IsElementPresent(locator);
+            string url = driver.FindElement(locator).GetAttribute("href");
+            driver.Navigate().GoToUrl(url);
+        }
 
     }
 }
