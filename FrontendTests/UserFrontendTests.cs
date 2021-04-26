@@ -34,40 +34,40 @@ namespace StoreTesting.FrontendTests
 
             // 1. Запонение формы
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[2]/td[1]/input[@name='firstname']"), user.FirstName);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[2]/td[1]/input[@name='firstname']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//div[@id='create-account']//tr[2]/td[1]/input[@name='firstname']"),"value"));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[2]/td[2]/input[@name='lastname']"), user.LastName);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[2]/td[2]/input[@name='lastname']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//div[@id='create-account']//tr[2]/td[2]/input[@name='lastname']"), "value"));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[3]/td[1]/input[@name='address1']"), user.Address);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[3]/td[1]/input[@name='address1']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//div[@id='create-account']//tr[3]/td[1]/input[@name='address1']"), "value"));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[4]/td[1]/input[@name='postcode']"), user.Postcode);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[4]/td[1]/input[@name='postcode']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//div[@id='create-account']//tr[4]/td[1]/input[@name='postcode']"), "value"));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[4]/td[2]/input[@name='city']"), user.City);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[4]/td[2]/input[@name='city']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//div[@id='create-account']//tr[4]/td[2]/input[@name='city']"), "value"));
 
             // ---------------------------------------------------------------------------------------------------
             // Клик по элементу выпадающего списка
             PressClick(By.CssSelector("span [role='presentation']"));
             // В откр. списке ищем поле ввода
-            driver.FindElement(By.CssSelector("input.select2-search__field")).SendKeys("United States" + Keys.Enter);
+            user.EnterDataInput(driver, By.CssSelector("input.select2-search__field"), "United States");
             // ---------------------------------------------------------------------------------------------------
 
             DropDownList(By.CssSelector("select[name='zone_code']"), rnd.Next(1, 65));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[6]/td[1]/input[@name='email']"), user.Email);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[6]/td[1]/input[@name='email']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//div[@id='create-account']//tr[6]/td[1]/input[@name='email']"), "value"));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[6]/td[2]/input[@name='phone']"), user.Phone);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[6]/td[2]/input[@name='phone']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//div[@id='create-account']//tr[6]/td[2]/input[@name='phone']"), "value"));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[8]/td[1]/input[@name='password']"), user.Password);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[8]/td[1]/input[@name='password']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//div[@id='create-account']//tr[8]/td[1]/input[@name='password']"), "value"));
 
             user.EnterDataInput(driver, By.XPath(".//div[@id='create-account']//tr[8]/td[2]/input[@name='confirmed_password']"), user.Password);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//div[@id='create-account']//tr[8]/td[2]/input[@name='confirmed_password']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//div[@id='create-account']//tr[8]/td[2]/input[@name='confirmed_password']"), "value"));
 
             //driver.FindElement(By.XPath(".//div[@id='create-account']//tr[8]/td[1]/input[@name='password']")).SendKeys(Keys.Control + "c" + user.Password);
             //driver.FindElement(By.XPath(".//div[@id='create-account']//tr[8]/td[2]/input[@name='confirmed_password']")).SendKeys(Keys.Control + "v");
@@ -77,27 +77,27 @@ namespace StoreTesting.FrontendTests
             // 2. Logout из аккаунта
 
             user.LogoutAccount(driver, By.XPath(".//div[@id='box-account']//li[last()]/a[.='Logout']"));
-            Assert.IsTrue(driver.FindElement(By.XPath(".//div[@id='box-account-login']/h3[@class='title']")).GetAttribute("textContent") == "Login");
+            Assert.IsTrue(GetAttributeElement(By.XPath(".//div[@id='box-account-login']/h3[@class='title']"), "textContent") == "Login");
 
             // 3. Авторизация под пользователем
 
             user.EnterDataInput(driver, By.XPath(".//form[@name='login_form']//input[@name='email']"), user.Email);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//form[@name='login_form']//input[@name='email']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//form[@name='login_form']//input[@name='email']"), "value"));
 
             user.EnterDataInput(driver, By.XPath(".//form[@name='login_form']//input[@name='password']"), user.Password);
-            Assert.IsNotNull(driver.FindElement(By.XPath(".//form[@name='login_form']//input[@name='password']")).GetAttribute("value"));
+            Assert.IsNotNull(GetAttributeElement(By.XPath(".//form[@name='login_form']//input[@name='password']"), "value"));
 
             PressClick(By.XPath(".//form[@name='login_form']//button[@name='login']"));
 
             // Проверяем, что зашли под пользователем
-            Assert.IsTrue(driver.FindElement(By.XPath(".//div[@id='box-account']/h3[@class='title']")).GetAttribute("textContent") == "Account");
+            Assert.IsTrue(GetAttributeElement(By.XPath(".//div[@id='box-account']/h3[@class='title']"), "textContent") == "Account");
 
             // 4. Logout из аккаунта
 
             user.LogoutAccount(driver, By.XPath(".//div[@id='box-account']//li[last()]/a[.='Logout']"));
 
             // Проверяем, что вышли под пользователем
-            Assert.IsTrue(driver.FindElement(By.XPath(".//div[@id='box-account-login']/h3[@class='title']")).GetAttribute("textContent") == "Login");
+            Assert.IsTrue(GetAttributeElement(By.XPath(".//div[@id='box-account-login']/h3[@class='title']"), "textContent") == "Login");
         }
     }
 }

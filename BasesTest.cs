@@ -319,7 +319,6 @@ namespace StoreTesting
         protected string GetCssValueElement(By locator, string value)
         {
             IsElementPresent(locator);
-
             return driver.FindElement(locator).GetCssValue(value.Trim()).Trim();
         }
     }
