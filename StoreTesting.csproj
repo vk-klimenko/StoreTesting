@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackendTests\CountriesBackendTests.cs" />
+    <Compile Include="BackendTests\LogsBackendTests.cs" />
     <Compile Include="BackendTests\PageBackendTests.cs" />
     <Compile Include="BackendTests\ProductBackendTests.cs" />
     <Compile Include="BasesTest.cs" />
