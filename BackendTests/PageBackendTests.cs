@@ -53,22 +53,7 @@ namespace StoreTesting.BackendTests
                 IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
                 js.ExecuteScript("window.open()");
 
-                // Ожидание появления нового окна
-                string newWindow = wait.Until<string>((driver) =>
-                {
-                    string foundWindow = null;
-                    IList<string> newHandles = driver.WindowHandles.Except(existWindows).ToList();
-                    //if (newHandles.Count > 0)
-                    //    foundWindow = newHandles[0];
-                    wait.Until<bool>(dr => HANDLES(newHandles));
-                    return newHandles[0];
-                    //return foundWindow;
-                });
-
-                
-
-                //string newWindow = wait.Until<string>(driver => TryFindNewWindow(driver, existWindows));
-
+                string newWindow = wait.Until<string>(driver => TryFindNewWindow(existWindows));
 
                 driver.SwitchTo().Window(newWindow);
                 Assert.IsTrue(driver.CurrentWindowHandle == newWindow);
@@ -81,38 +66,15 @@ namespace StoreTesting.BackendTests
 
         }
 
-        private string TryFindNewWindow(IWebDriver drv, IList<string> existWindows)
+        private string TryFindNewWindow(IList<string> existWindows)
         {
-            IList<string> newHandles = drv.WindowHandles.Except(existWindows).ToList();
-            if (newHandles.Count > 0)
-                return newHandles[0];
-            return null;
-
-        }
-        private bool HANDLES(IList<string> handle)
-        {
-            if (handle.Count > 0)
-                return true;
-            return false;
-
+            IList<string> newHandles = driver.WindowHandles;
+            newHandles.Except(existWindows).ToList();
+            return newHandles.Count > 0 ? newHandles[0] : null;
         }
 
-        //        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-        //        int previousWinCount = driver.WindowHandles.Count;
-        //        // Perform the action to open a new Window
-        //        wait.Until(driver => driver.WindowHandles.Count == (previousWinCount + 1));
-        //        driver.SwitchTo().Window(driver.WindowHandles.Last());
-        //        wait.Until(driver => driver.Url.Contains("desired_url_or_a_substring_of_it"));
-        /* -------------------------------------------------------------------------------------------*/
 
-        //driver.SwitchTo().Window(driver.WindowHandles.Last());
-
-        /* -------------------------------------------------------------------------------------------*/
-        //def wait_for_new_window(driver, timeout= 10): #http://stackoverflow.com/questions/26641779/python-selenium-how-to-wait-for-new-window-opens
-        //handles_before = driver.window_handles
-        //yield
-        //WebDriverWait(driver, timeout).until(
-        //    lambda driver: len(handles_before) != len(driver.window_handles))
-        /* -------------------------------------------------------------------------------------------*/
+        
+       
     }
 }
