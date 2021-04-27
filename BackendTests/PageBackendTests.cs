@@ -39,7 +39,7 @@ namespace StoreTesting.BackendTests
 
             PressClick(By.XPath(".//ul[@id='box-apps-menu']//span[@class='name' and text()='Countries']"));
 
-            GoToPageURL("http://litecart/admin/?app=countries&doc=edit_country&country_code=AR");
+            GoToPageURL("http://litecart/admin/?app=countries&doc=edit_country&country_code=CU");
 
             string mainWindowId = driver.CurrentWindowHandle;
             IList<string> existWindows = driver.WindowHandles;
@@ -68,8 +68,8 @@ namespace StoreTesting.BackendTests
 
         private string TryFindNewWindow(IList<string> existWindows)
         {
-            IList<string> newHandles = driver.WindowHandles;
-            newHandles.Except(existWindows).ToList();
+            IList<string> newHandles = driver.WindowHandles.Except(existWindows).ToList();
+            //newHandles.Except(existWindows).ToList();
             return newHandles.Count > 0 ? newHandles[0] : null;
         }
 
