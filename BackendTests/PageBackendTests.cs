@@ -66,7 +66,7 @@ namespace StoreTesting.BackendTests
 
         }
 
-        private string TryFindNewWindow(IList<string> existWindows)
+        public string TryFindNewWindow(IList<string> existWindows)
         {
             IList<string> newHandles = driver.WindowHandles.Except(existWindows).ToList();
             //newHandles.Except(existWindows).ToList();

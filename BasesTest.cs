@@ -321,5 +321,31 @@ namespace StoreTesting
             IsElementPresent(locator);
             return driver.FindElement(locator).GetCssValue(value.Trim()).Trim();
         }
+
+        /// <summary>
+        /// Переключение на новую вкладку
+        /// </summary>
+        /// <param name="id">ID вкладки</param>
+        protected void NavigateSwitchToWindow(string id)
+        {
+            driver.SwitchTo().Window(id);
+        }
+
+        /// <summary>
+        /// Открыть новую вкладку (JavaScriptExecutor)
+        /// </summary>
+        protected void NavigateOpenNewWindow()
+        {
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript("window.open()");
+        }
+
+        /// <summary>
+        /// Закрыть текущую вкладку
+        /// </summary>
+        protected void CloseWindow()
+        {
+            driver.Close();
+        }
     }
 }
